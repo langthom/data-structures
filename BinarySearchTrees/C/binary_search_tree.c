@@ -146,21 +146,3 @@ void freeTreeRec( Node *node )
         free( node );
 }
 
-//--------------------------------------------------------------------------
-int main( int argc, char *argv[] )
-{
-    BinTree *test = malloc( sizeof( BinTree ));
-    test->root = newNode( 10 );
-
-    insert( test, 7  );
-    insert( test, 42 );
-    insert( test, 8  );
-    insert( test, 3  );
-    insert( test, 17 );
-
-    printTree( test );
-
-    freeTree( test );
-    return (0);
-}
-

@@ -15,13 +15,17 @@ implementation has a  test/  directory that includes a main method
 which does some testing and output.
 If you want to test like this, compile them just as usual for the
 individual language:
+
 ( Replace the things in [ ] with the appropiate name ):
 
-* C      ->  $>  gcc -c main.c
-             $>  gcc -o [EXECUTABLE_NAME] main.o
+Note: For C and c++ I will add Makefiles, so just go into the appropiate 
+      directory and type in the shell  "make".
+      Then all will compile automatically, because there are some 
+      dependencies on other files.
 
-* C++    ->  $>  g++ -c main.cpp
-             $>  g++ -o [EXECUTABLE_NAME] main.o
+      The compiler used for C is  gcc  while the compiler used for
+      C++ is   g++.
+
 
 * Java   ->  $>  javac main.java
              $>  java main

@@ -3,38 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//--------------------------------------------------------------------
-struct _Node_
-{
-    int value;
-    struct _Node_ *left;
-    struct _Node_ *right;
-};
+#include "binary_search_tree.h"
 
-typedef struct _Node_ Node;
-
-
-struct _BinTree_
-{
-    Node *root;
-};
-
-typedef struct _BinTree_ BinTree;
-
-//---------------------------------------------------------------------
-// methods and functions that should be used by a programmer directly,
-// all the others are just for helping
-Node* newNode( int element );
-int isEmpty( BinTree *tree );
-void insert( BinTree *tree, int element );
-void printTree( BinTree *tree );
-void freeTree( BinTree *tree );
-
-//--------------------------------------------------------------------
-// helper functions
-void insertIntoTree( Node *node, int element );
-void printTreeFromRoot( Node *node );
-void freeTreeRec( Node *node );
 
 //---------------------------------------------------------------------
 /* Creating a new node that holds a passed integer value.

@@ -1,0 +1,6 @@
+# Object files
+*.o                 # C, C++
+*.hi                # Haskell
+*.class             # Java
+*.x86_64            # Linux executables
+

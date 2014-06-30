@@ -20,8 +20,6 @@ public class InsertionSort<T extends Comparable<T>>{
     /**
      * Sorting method, performs the insertion
      * sort algorithm.
-     *
-     * @param  arr  The array to sort.
      */
     public void sort(){
         for( int i = 1; i < arr.length; i++ ){

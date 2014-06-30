@@ -1,5 +1,6 @@
 module BinTree( BinTree(..),        -- ^ data type
                 emptyTree,          -- ^ empty tree constant
+                isEmpty,            -- ^ is tree empty or not?
                 insert,             -- ^ inserting in tree
                 delete,             -- ^ deleting from tree
                 preorder,           -- ^ traversing preorder
@@ -38,12 +39,12 @@ insert value (Node l o r) | value < o  = Node (insert value l) o r
 
 
 -- deleting a value from a tree
-delete :: (Ord a) => BinTree a -> a -> Maybe (BinTree a)
-delete EmptyTree _                                     = Nothing
-delete (Node EmptyTree o EmptyTree) value | value == o = Just emptyTree
-                                          | otherwise  = Nothing
-delete (Node l o r) value | value < o                  = delete l value
-                          | value > o                  = delete r value
+delete :: (Ord a) => BinTree a -> a -> BinTree a
+delete EmptyTree _                                       = error "Nothing to delete."
+delete (Node EmptyTree o EmptyTree) value | value == o   = emptyTree
+                                          | otherwise    = error "Element not found"
+delete (Node l o r) value | value < o                    = Node (delete l value) o r
+                          | value > o                    = Node l o (delete r value)
 
 
 

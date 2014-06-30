@@ -174,19 +174,22 @@ public class BinarySearchTree<T extends Comparable<T>>{
         if( isEmpty() )
             System.err.println( "Error! Cannot delete from empty Tree." );
         Node<T> nodeToDelete = findNode( element );
-        if( nodeToDelete.value.compareTo( root.value ) == 0 )
-            deleteRoot();
-        else if( nodeToDelete.left != null && nodeToDelete.right != null )
-            deleteInternalNode( nodeToDelete );
-        else 
-            deleteNode( nodeToDelete );
+        if( nodeToDelete != null ){
+            if( nodeToDelete.value.compareTo( root.value ) == 0 )
+                deleteRoot();
+            else if( nodeToDelete.left != null && nodeToDelete.right != null )
+                deleteInternalNode( nodeToDelete );
+            else 
+                deleteNode( nodeToDelete );
+        }else{
+            System.err.println( "Error! Element not found" );
+        }
     }
 
     /**
      * Deletes the root element.
      */
     private void deleteRoot(){
-        // deleting root by swapping with max of left
         deleteInternalNode( root );
     }
 

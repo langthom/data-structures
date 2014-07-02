@@ -1,3 +1,7 @@
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ListIterator;
+
 /**
  * Insertion sort-class.
  *
@@ -6,44 +10,28 @@
  */
 public class InsertionSort<T extends Comparable<T>>{
 
-    T[] arr;
+    T value;
 
     /**
-     * Constructor.
-     * 
-     * @param  elements  The array of elements to sort.
+     * Empty Constructor.
      */
-    public InsertionSort( T ... elements ){
-        arr = elements;
-    }
+    public InsertionSort(){}
 
     /**
      * Sorting method, performs the insertion
      * sort algorithm.
      */
-    public void sort(){
-        for( int i = 1; i < arr.length; i++ ){
-            T value = arr[i];
-            int j = i - 1;
-            while( j >= 0 && arr[j].compareTo( value ) > 0 ){
-                arr[j+1] = arr[j];
-                j--;
-            }
-            arr[j+1] = value;
+    public static <T extends Comparable<T>> List<T> insertionSort( T[] array ){
+        List<T> list = new LinkedList<T>();
+        for( T element : array ){
+            ListIterator<T> iterator = list.listIterator(); 
+            boolean foundGreater = false;
+            while( iterator.hasNext() && !foundGreater )
+                foundGreater |= iterator.next().compareTo( element ) > 0;
+            if( foundGreater )
+                iterator.previous();
+            iterator.add( element );
         }
-    }
-
-    /**
-     * String-representation of the array.
-     *
-     * @return String-representation of the array.
-     */
-    public String toString(){
-        StringBuilder out = new StringBuilder();
-        out.append( "[ " );
-        for( T elem : arr )
-            out.append( elem + " " );
-        out.append( "]" );
-        return out.toString();
+        return list;
     }
 }

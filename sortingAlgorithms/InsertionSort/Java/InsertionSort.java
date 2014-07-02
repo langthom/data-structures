@@ -10,8 +10,6 @@ import java.util.ListIterator;
  */
 public class InsertionSort<T extends Comparable<T>>{
 
-    T value;
-
     /**
      * Empty Constructor.
      */

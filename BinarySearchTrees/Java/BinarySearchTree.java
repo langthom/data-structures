@@ -1,10 +1,13 @@
 // BinarySearchTree.java - Implementation of a binary search tree
 
+import java.util.Queue;
+import java.util.LinkedList;
+
 /**
  * Implementation of a generic binary search tree in Java.
  *
  * @author  Thomas Lang
- * @version 0.1
+ * @version 0.2
  */
 public class BinarySearchTree<T extends Comparable<T>>{
 
@@ -19,6 +22,7 @@ public class BinarySearchTree<T extends Comparable<T>>{
         private Node<T> left;
         private Node<T> right;
         private Node<T> parent;
+        private int bfsnum;
 
         /**
          * Constructor, saves the passed generic value.
@@ -28,6 +32,7 @@ public class BinarySearchTree<T extends Comparable<T>>{
         private Node( T value ){
             this.value = value;
             left = right = parent = null;
+            bfsnum = 0;
         }
 
         /**
@@ -164,6 +169,28 @@ public class BinarySearchTree<T extends Comparable<T>>{
             traversePostorderRec( node.right );
         System.out.print( node );
     }
+
+    /**
+     * Traversing in breadth-first order by using a Queue.
+     * Each child of a node is offered to the Queue. Then the
+     * first node is removed from it and all it's children is
+     * offered, until the Queue is not empty.
+     */
+    public void traverseBreadthFirst(){
+        Queue<Node> q = new LinkedList<Node>();
+        q.offer( root ); int bfscount = 1; root.bfsnum = bfscount;
+        while( !q.isEmpty() ){
+            Node<T> v = q.poll();
+            System.out.print( v );
+            bfscount++;v.bfsnum = bfscount;
+            if( v.left != null )
+                q.offer( v.left );
+            if( v.right != null )
+                q.offer( v.right );
+        }
+        System.out.println();
+    }
+
 
     /**
      * Deletes the node containing the value "element" from the tree.

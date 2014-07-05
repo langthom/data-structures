@@ -4,7 +4,7 @@
  * Testing class for the binary search tree.
  *
  * @author  Thomas Lang
- * @version 0.0
+ * @version 0.2
  */
 public class Main{
 
@@ -31,6 +31,9 @@ public class Main{
         System.out.println();
         System.out.println( "### Postorder-traversing: " );
         tree.traversePostorder();
+        System.out.println();
+        System.out.println( "### Breadth-first-traversion: " );
+        tree.traverseBreadthFirst();
         System.out.println();
 
         System.out.println( "*** Deleting: 5\n" );

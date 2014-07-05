@@ -4,12 +4,7 @@
  * @author Thomas Lang
  * @version 0.1
  */
-public class BubbleSort<T extends Comparable<T>>{
-
-    /**
-     * Empty constructor.
-     */
-    public BubbleSort(){}
+public class BubbleSort{
 
     /**
      * Implementation of the Bubble sort algorithm.

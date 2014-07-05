@@ -6,14 +6,9 @@ import java.util.ListIterator;
  * Insertion sort-class.
  *
  * @author Thomas Lang
- * @version 0.2
+ * @version 0.3
  */
-public class InsertionSort<T extends Comparable<T>>{
-
-    /**
-     * Empty Constructor.
-     */
-    public InsertionSort(){}
+public class InsertionSort{
 
     /**
      * Sorting method, performs the insertion

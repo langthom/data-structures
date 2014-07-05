@@ -6,23 +6,9 @@ import java.util.ListIterator;
  * Selection sort-class.
  *
  * @author Thomas Lang
- * @version 0.1
+ * @version 0.2
  */
-public class SelectionSort<T extends Comparable<T>>{
-
-    private List<T> list;
-
-    /**
-     * Constructor, takes a variable number of
-     * arguments and fills them in a LinkedList.
-     *
-     * @param  elements  The elements to fill in
-     */
-    public SelectionSort(T ... elements){
-        list = new LinkedList();
-        for( T elem : elements )
-            list.add( elem );
-    }
+public class SelectionSort{
 
     /**
      * Sorting function, performs the selection
@@ -30,7 +16,7 @@ public class SelectionSort<T extends Comparable<T>>{
      *
      * @return  A sorted list.
      */
-    public List<T> sort(){
+    public static <T extends Comparable<T>> List<T> selectionSort( List<T> list ){
         List<T> res = new LinkedList<T>();
         T minimum = null;
 
@@ -49,7 +35,7 @@ public class SelectionSort<T extends Comparable<T>>{
      * @param  list  The list to search in.
      * @return The minimum of the list
      */
-    private T findMinimum( List<T> list ){
+    private static <T extends Comparable<T>> T findMinimum( List<T> list ){
         ListIterator<T> it = list.listIterator();
         T min = list.get( 0 );
         while( it.hasNext() ){
@@ -58,13 +44,4 @@ public class SelectionSort<T extends Comparable<T>>{
         }
         return min;
     }  
-
-    /**
-     * String-representation.
-     *
-     * @return The String representation of the list.
-     */
-    public String toString(){
-        return list.toString();
-    }
 }

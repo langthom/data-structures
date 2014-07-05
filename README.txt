@@ -27,8 +27,8 @@ Note: For C and c++ I will add Makefiles, so just go into the appropiate
       C++ is   g++.
 
 
-* Java   ->  $>  javac main.java
-             $>  java main
+* Java   ->  $>  javac Main.java
+             $>  java Main
 
 
 

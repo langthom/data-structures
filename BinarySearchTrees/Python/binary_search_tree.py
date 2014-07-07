@@ -48,6 +48,7 @@ class BinarySearchTree:
         else:
             self.__insertIntoTree( self.root, value )
 
+
     def __insertIntoTree( self, node, value ):
         """Does the main inserting. Follows this rule:
                 If the value is less than the current node,
@@ -144,13 +145,12 @@ class BinarySearchTree:
         """
         if self.isEmpty():
             raise ValueError( "Error! Cannot delete from empty tree." )
-        import pdb; pdb.set_trace()
+        
         nodeToDelete = self.__findNode( value )
-        print nodeToDelete
-        #import pdb; pdb.set_trace()
+        
         if nodeToDelete is not None:
-            if nodeToDelete.value == root.value:
-                self.__deleteInternalNode( root )
+            if nodeToDelete.value == self.root.value:
+                self.__deleteInternalNode( self.root )
             elif ( nodeToDelete.left is not None ) and ( nodeToDelete.right is not None ):
                 self.__deleteInternalNode( nodeToDelete )
             else:
@@ -210,25 +210,18 @@ class BinarySearchTree:
         if self.isEmpty():
             print( "Error! No elements in empty tree." )
         else:
-            #import pdb; pdb.set_trace()
-            res = self.__findNodeRec( self.root, element )
-            print "Return things" + str( res)
-            return res
+            return self.__findNodeRec( self.root, element )
         
 
     def __findNodeRec( self, node, element ):
         """Does the main finding, goes recursively 
         through the tree"""
-        #import pdb; pdb.set_trace()
-        if node is None:
-            return None
         if node.value == element:
-            print "Found: " + str(node.value == element)
             return node
         elif node.value > element:
-            self.__findNodeRec( node.left, element )
+            return self.__findNodeRec( node.left, element )
         else:
-            self.__findNodeRec( node.right, element )
+            return self.__findNodeRec( node.right, element )
 
 
     def __findMaxOfMinNode( self, node ):
@@ -293,8 +286,13 @@ def main():
     print( "Postorder-traversal: ")
     t.postorder()
     print; print
-    print( "Deleting Node containing \"42\" ...." )
+    print( "Deleting Node containing \"42\" ..." )
     t.delete( 42 )
+    print( "\n  ### Actual tree: \n" )
+    print( t )
+    print; print
+    print( "Deleting Node containing \"5\" ..." )
+    t.delete( 5 )
     print( "\n  ### Actual tree: \n" )
     print( t )
 

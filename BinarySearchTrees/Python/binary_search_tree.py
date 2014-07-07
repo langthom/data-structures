@@ -138,6 +138,26 @@ class BinarySearchTree:
 
     ###########################################################
 
+    def breadthfirst( self ):
+        """Traverses the tree in breadthfirst-direction.
+        Normally we would use a Queue, but instead of 
+        importing it we just simulate it with a list."""
+        queue = []
+        queue.append( self.root )
+        bfscount = 1
+        self.root.bfsnum = bfscount
+        while( len( queue ) != 0 ):
+            v = queue.pop()
+            print( v )
+            bfscount += 1; v.bfsnum = bfscount
+            if v.left is not None:
+                queue.insert( 0, v.left )
+            if v.right is not None:
+                queue.insert( 0, v.right )
+        print
+
+    ###########################################################
+
     def delete( self, value ):
         """Deletes the Node containing 'value' from the tree.
         
@@ -285,6 +305,8 @@ def main():
     t.inorder()
     print( "Postorder-traversal: ")
     t.postorder()
+    print( "Breadth-first-traversal: " )
+    t.breadthfirst()
     print; print
     print( "Deleting Node containing \"42\" ..." )
     t.delete( 42 )

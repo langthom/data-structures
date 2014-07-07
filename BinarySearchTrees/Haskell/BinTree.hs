@@ -13,7 +13,12 @@ where
 -- params: a -> type of saved information
 data BinTree a = EmptyTree
                | Node (BinTree a) a (BinTree a)
-               deriving (Show, Ord, Eq)
+               deriving (Ord, Eq)
+
+
+instance (Show a) => Show (BinTree a) where
+    show EmptyTree    = " Empty tree"
+    show (Node l o r) = "\t( Node: " ++ show o ++ ")\n ( " ++ show l ++ " " ++ show r ++ " )"
 
 
 -- constant function representing the empty tree

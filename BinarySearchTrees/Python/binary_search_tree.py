@@ -138,10 +138,112 @@ class BinarySearchTree:
     ###########################################################
 
     def delete( self, value ):
+        """Deletes the Node containing 'value' from the tree.
+        
+        @param  value  Content of the node-to-delete
+        """
         if self.isEmpty():
             raise ValueError( "Error! Cannot delete from empty tree." )
-        #else:
-            
+        import pdb; pdb.set_trace()
+        nodeToDelete = self.__findNode( value )
+        print nodeToDelete
+        #import pdb; pdb.set_trace()
+        if nodeToDelete is not None:
+            if nodeToDelete.value == root.value:
+                self.__deleteInternalNode( root )
+            elif ( nodeToDelete.left is not None ) and ( nodeToDelete.right is not None ):
+                self.__deleteInternalNode( nodeToDelete )
+            else:
+                self.__deleteNode( nodeToDelete )
+        else:
+            raise ValueError( "Error! Element not found." )
+
+
+    def __deleteInternalNode( self, node ):
+        """Deletes an internal node by swapping it's value
+        with the next-less node and then deleting that node.
+        
+        @param  node  Current node
+        """
+        maxOfMin = self.__findMaxOfMinNode( node )
+        node.value = maxOfMin.value
+        self.__deleteNode( maxOfMin )
+
+
+    def __deleteNode( self, node ):
+        """Deletes any other node and looks, if it's a left 
+        or a right child (to guarantee after the process that
+        we also have a search tree.
+        
+        @param  node  Current node.
+        """
+        if ( node.left is None ) and ( node.right is None ):
+            if node.parent.right.value == node.value:
+                node.parent.right = None
+                node.parent = None
+            else:
+                node.parent.left = None
+                node.parent = None
+        elif node.left is not None:
+            if node.parent.right.value == node.value:
+                node.parent.right = node.left
+                node.left.parent = node.parent
+                node.parent = None
+            else:
+                node.parent.left = node.left
+                node.left.parent = node.parent
+                node.parent = None
+        else:
+            if node.parent.right.value == node.value:
+                node.parent.left = node.right
+                node.right.parent = node.parent
+                node.parent = None
+            else:
+                node.parent.right = node.right
+                node.right.parent = node.parent
+                node.parent = None
+
+
+    def __findNode( self, element ):
+        """Finds a specific node containing the value
+        'element' in the tree."""
+        if self.isEmpty():
+            print( "Error! No elements in empty tree." )
+        else:
+            #import pdb; pdb.set_trace()
+            res = self.__findNodeRec( self.root, element )
+            print "Return things" + str( res)
+            return res
+        
+
+    def __findNodeRec( self, node, element ):
+        """Does the main finding, goes recursively 
+        through the tree"""
+        #import pdb; pdb.set_trace()
+        if node is None:
+            return None
+        if node.value == element:
+            print "Found: " + str(node.value == element)
+            return node
+        elif node.value > element:
+            self.__findNodeRec( node.left, element )
+        else:
+            self.__findNodeRec( node.right, element )
+
+
+    def __findMaxOfMinNode( self, node ):
+        """Finds the maximum node of the left
+        subtree of node, which is needed for
+        deleting.
+        
+        @param  node  Current node
+        """
+        if node.left is not None:
+            leftChild = node.left
+            while leftChild.right is not None:
+                leftChild = leftChild.right
+        return leftChild 
+
 
     ###########################################################
 
@@ -190,6 +292,11 @@ def main():
     t.inorder()
     print( "Postorder-traversal: ")
     t.postorder()
+    print; print
+    print( "Deleting Node containing \"42\" ...." )
+    t.delete( 42 )
+    print( "\n  ### Actual tree: \n" )
+    print( t )
 
 if __name__ == "__main__":
     main()

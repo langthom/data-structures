@@ -1,5 +1,17 @@
-module QuickSort( quicksort ) where
+module QuickSort( sort ) where
 
-quicksort :: (Ord a) => [a] -> [a]
-quicksort []     = []
-quicksort (x:xs) = quicksort [y | y <- xs, y < x] ++ [x] ++ quicksort [z | z <- xs, z > x ]
+{-|
+Module      :   QuickSort.hs
+Description :   Implementation of QuickSort
+Copyright   :   (c) Thomas Lang, 2014
+License     :   BSD3
+
+Stability   :   stable
+Portability :   portable
+
+This module implements the Quick-Sort algorithm.
+ -}
+
+sort :: (Ord a) => [a] -> [a]
+sort []     = []
+sort (x:xs) = sort [y | y <- xs, y < x] ++ [x] ++ sort [z | z <- xs, z > x ]

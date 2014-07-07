@@ -31,6 +31,17 @@ Note: For C and c++ I will add Makefiles, so just go into the appropiate
              $>  java Main
 
 
+--- Haskell ---
+All Haskell structures include a "Main.hs" file. Note that some of these
+include a main function with a signature similar to
+
+            main :: IO()
+
+If this is existant, just type into your console:
+
+$> runghc Main.hs
+
+
 --- Python ---
 As Python is an interpreted language, just typ in on your console:
 

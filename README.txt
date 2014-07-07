@@ -31,7 +31,41 @@ Note: For C and c++ I will add Makefiles, so just go into the appropiate
              $>  java Main
 
 
+--- Python ---
+As Python is an interpreted language, just typ in on your console:
+
+$> python [MODULE_NAME].py
+
+
+If you want to execute that file without explicitly starting the python
+command, you have to do the following:
+
+$> chmod u+x [MODULE_NAME].py
+$> ./[MODULE_NAME].py
+
+
 
 ... others may follow
 
 
+---- What do you need? ---
+
+--- C ---
+To compile the programs written in C, you need a C-Compiler (which comes
+with most operating systems), e.g. the gcc under Linux.
+
+--- C++ ---
+To compile the programs written in C++, you need a C++ - Compiler.
+Under Linux, I recommend the g++ (may come with some distributions).
+
+--- Java ---
+To compile the Java programs, you need - well - Java. It should be already
+come with most operating systems.
+
+--- Python ---
+To execute Python code, you'll need that programming language. Under Linux
+type:
+
+$> sudo apt-get install python
+
+... or emerge, pacman -S or what else your distributions supports.

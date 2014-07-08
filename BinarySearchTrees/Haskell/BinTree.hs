@@ -5,9 +5,12 @@ module BinTree( BinTree(..),        -- ^ data type
                 delete,             -- ^ deleting from tree
                 preorder,           -- ^ traversing preorder
                 inorder,            -- ^ traversing inorder
-                postorder           -- ^ traversing postorder
+                postorder,          -- ^ traversing postorder
+                atLevel             -- ^ return a list of all 
+                                    --   elements on the same tree-level
               )
 where
+
 
 -- Binary search tree 
 -- params: a -> type of saved information
@@ -18,7 +21,7 @@ data BinTree a = EmptyTree
 
 instance (Show a) => Show (BinTree a) where
     show EmptyTree    = " Empty tree"
-    show (Node l o r) = "\t( Node: " ++ show o ++ ")\n ( " ++ show l ++ " " ++ show r ++ " )"
+    show (Node l o r) = "( Node: " ++ show o ++ ")\n( Left:  " ++ show l ++ " , Right:  " ++ show r ++ " )"
 
 
 -- constant function representing the empty tree
@@ -74,3 +77,11 @@ postorder :: BinTree a -> [a]
 postorder EmptyTree    = []
 postorder (Node l o r) = postorder l ++ postorder r ++ [o]
 
+
+-------------------------------------------------------------------------------
+
+-- returns a list of all elements on the same tree-level
+atLevel :: BinTree a -> Int -> [a]
+atLevel EmptyTree _    = []
+atLevel (Node l x r) 0 = [x]
+atLevel (Node l x r) a = atLevel l (a-1) ++ atLevel r (a-1)

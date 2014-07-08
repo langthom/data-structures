@@ -4,9 +4,9 @@ import java.util.Random;
  * Testing module for a Stack.
  *
  * @author Thomas Lang, 2014
- * @version 0.1
+ * @version 0.2
  */
-public class UsesStack{
+public class Main{
 
     /**
      * Main method, does some testing.

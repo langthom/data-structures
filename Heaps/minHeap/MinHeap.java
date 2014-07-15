@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 /**
  * Implementation of a Min-Heap.
  * A Min-Heap is a specialization of a Heap that is used for
@@ -32,6 +34,58 @@ public class MinHeap<T extends Comparable<T>> extends Heap<T>{
         Node<T> node = new Node<T>( value );
         super.insert( node );
         bubbleUp( node );
+    }
+
+    /**
+     * Performs the "delete min" operation on the Heap.
+     * This means that the root (that is always the minimum
+     * of all elements) will be swapped with the last node
+     * inserted. After that, that node will be deleted and
+     * the new root will be "bubble-down'ed" until 
+     * everything is okay again.
+     *
+     * @throws NoSuchElementException
+     */
+    public void deleteMin() throws NoSuchElementException{
+        Node<T> last = getLastNode();
+        root.setValue( last.getValue() );
+        // deleting "last" node
+        if( last.getParent().getLeft() == last ){
+            last.getParent().setLeft( null );
+            last.setParent( null );
+        }else{
+            last.getParent().setRight( null );
+            last.setParent( null );
+        }
+        size--;
+
+        bubbleDown( root );
+    }
+
+ 
+    /**
+     * Does the "bubble down".
+     * So it swaps a passed <code>node</code> with either
+     * its left or right child until the ordering in the
+     * Heap is restored.
+     *
+     * @param  node  Current node.
+     */
+    private void bubbleDown( Node<T> node ){
+        if(( node.getLeft() == null ) && ( node.getRight() == null ))
+            return;
+        if( node.getLeft() != null ){
+            if( node.getValue().compareTo( node.getLeft().getValue() ) > 0 ){
+                swapNodes( node, node.getLeft() );
+                bubbleDown( node.getLeft() );
+            }
+        }
+        if( node.getRight() != null ){
+            if( node.getValue().compareTo( node.getRight().getValue() ) > 0 ){
+                swapNodes( node, node.getRight() );
+                bubbleDown( node.getRight() );
+            }
+        }
     }
 
     /**

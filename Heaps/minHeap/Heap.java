@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 /**
  * Abstract class for a Heap. 
  * A Heap is a binary tree following the rule, that a
@@ -15,6 +17,7 @@ public abstract class Heap<T extends Comparable<T>>{
 
     protected Node<T> root;
     protected int size;
+    private static Object last; // pointer to last Node added
 
     /**
      * Constructor for a new Heap, initializes 
@@ -24,6 +27,7 @@ public abstract class Heap<T extends Comparable<T>>{
     public Heap(){
         root = null;
         size = 0;
+        last = null;
     }
 
     /**
@@ -36,6 +40,15 @@ public abstract class Heap<T extends Comparable<T>>{
     }
 
     /**
+     * Gets the size of the Heap.
+     *
+     * @return The size of the heap.
+     */
+    public int getSize(){
+        return size;
+    }
+
+    /**
      * Inserts a new Node to the heap.
      *
      * @param node  The node to insert
@@ -44,8 +57,10 @@ public abstract class Heap<T extends Comparable<T>>{
         if( isEmpty() ){
             root = node;
             size++;
+            last = node;
         }else{
             insert( root, node );
+            size++;
         }
     }
 
@@ -60,18 +75,20 @@ public abstract class Heap<T extends Comparable<T>>{
     private void insert( Node<T> node, Node<T> newNode ){
         if( node == null ){
             node = newNode;
+            last = newNode;
         }else if( node.getLeft() == null ){
             node.setLeft( newNode );
             newNode.setParent( node );
+            last = newNode;
         }else if( node.getRight() == null ){
             node.setRight( newNode );
             newNode.setParent( node );
-        }else if( isFullTree( node )){
-            insert( node.getLeft(), newNode );
+            last = newNode;
         }else if( isFullTree( node ) && isFullTree( node.getLeft() )){
             insert( node.getRight(), newNode );
+        }else if( isFullTree( node ) ){
+            insert( node.getLeft(), newNode );
         }
-        size++;
     }
 
     /**
@@ -88,17 +105,27 @@ public abstract class Heap<T extends Comparable<T>>{
     }
 
     /**
-     * String representation of a Heap.
+     * Gets the last Node inserted into the Heap.
      *
-     * @return A String representation of a Heap.
+     * @return The last Node inserted into the Heap.
+     * @throws NoSuchElementException
      */
-    public String toString(){
+    protected Node<T> getLastNode() throws NoSuchElementException{
         if( isEmpty() )
-            return "(empty tree)";
-        StringBuilder out = new StringBuilder();
-        out.append( "Root: " + root + "\n" );
-        out.append( treeString( root ) );
-        return out.toString();
+            throw new NoSuchElementException( "Error! No elements in Heap." );
+        else
+            return (Node<T>)last;
+    }
+
+    
+    /**
+     * Printing a Heap to stdout.
+     */
+    public void print(){
+        if( isEmpty() )
+            System.out.println( "(empty tree)" );
+        System.out.println( "Root: " + root );
+        printTreeRec( root );
     }
 
     /**
@@ -106,19 +133,15 @@ public abstract class Heap<T extends Comparable<T>>{
      * String representation of a Heap.
      *
      * @param  node  Current node.
-     * @return A String representation of the Heap.
      */
-    private String treeString( Node<T> node ){
-        StringBuilder out = new StringBuilder();
+    private void printTreeRec( Node<T> node ){
         if( node.getLeft() != null )
-            out.append( "Left: " + node.getLeft() + " "  );
+            System.out.println( "Left: " + node.getLeft() + " "  );
         if( node.getRight() != null )
-            out.append( "Right: " + node.getRight() );
-        out.append( "\n" );
+            System.out.println( "Right: " + node.getRight() );
         if( node.getLeft() != null )
-            treeString( node.getLeft() );
+            printTreeRec( node.getLeft() );
         if( node.getRight() != null )
-            treeString( node.getRight() );
-        return out.toString();
+            printTreeRec( node.getRight() );
     }
 }

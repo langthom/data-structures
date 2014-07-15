@@ -1,5 +1,5 @@
 /**
- * Testing module for a Min-Heap.
+ * Testing module for a Max-Heap.
  * 
  * @author Thomas Lang
  * @version July 15, 2014
@@ -13,7 +13,7 @@ public class Main{
         System.out.println( "*** Initializing new MinHeap ... done." );
         System.out.println( "*** Adding values 7, 42, 999, 0, 212, 512, 21 ... done." );
 
-        MinHeap<Integer> test = new MinHeap<Integer>();
+        MaxHeap<Integer> test = new MaxHeap<Integer>();
 
         test.insert( 7   );
         test.insert( 42  );
@@ -23,14 +23,14 @@ public class Main{
         test.insert( 512 );
         test.insert( 21  );
 
-        System.out.println( "   ### Current MinHeap: " );
+        System.out.println( "   ### Current MaxHeap: " );
         test.print();
         System.out.println( "\n   ### Number of nodes: " + test.getSize() );
 
-        System.out.println( "\n*** Performing \"deleteMin\" ... done." );
-        test.deleteMin();
+        System.out.println( "\n*** Performing \"deleteMax\" ... done." );
+        test.deleteMax();
 
-        System.out.println( "   ### Current MinHeap: " );
+        System.out.println( "   ### Current MaxHeap: " );
         test.print();
 
         System.out.println( "\n   ### Number of nodes: " + test.getSize() );

@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 /**
  * Implementation of a classical generic Stack.
  *
@@ -81,8 +83,11 @@ public class Stack<T extends Comparable<T>>{
      * Deletes the top element and returns it.
      *
      * @return Top element of the Stack.
+     * @throws NoSuchElementException
      */
-    public Node<T> pop(){
+    public Node<T> pop() throws NoSuchElementException {
+        if( isEmpty() )
+            throw new NoSuchElementException( "Error! Cannot pop from empty stack." );
         Node<T> top = sp;
         sp = sp.next;
         size--;
@@ -94,8 +99,11 @@ public class Stack<T extends Comparable<T>>{
      * like pop, but NOT DELETING IT.
      *
      * @return Top element of the Stack.
+     * @throws NoSuchElementException 
      */
-    public Node<T> top(){
+    public Node<T> top() throws NoSuchElementException {
+        if( isEmpty() )
+            throw new NoSuchElementException( "Error! Cannot top from empty stack." );
         return sp;
     }
 
@@ -105,6 +113,8 @@ public class Stack<T extends Comparable<T>>{
      * @return String representation of a Stack.
      */
     public String toString(){
+        if( isEmpty() )
+            return "(empty stack)";
         StringBuilder out = new StringBuilder();
         Node<T> front = sp;
         out.append( "---> " + front.value + "\n" );

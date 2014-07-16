@@ -8,6 +8,9 @@
  * This code is licensed under the BSD3 license.
  */
 
+#ifndef single_linked_list_h___
+#define single_linked_list_h___
+
 struct __Node__
 {
     int value;
@@ -80,3 +83,5 @@ void print(  List *list );
  * @param  list  The list to free.
  */
 void freeList( List *list );
+
+#endif  // single_linked_list_h___

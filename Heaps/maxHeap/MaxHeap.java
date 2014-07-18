@@ -72,21 +72,36 @@ public class MaxHeap<T extends Comparable<T>> extends Heap<T>{
      * @param  node  Current node.
      */
     private void bubbleDown( Node<T> node ){
+        // if node has no children, we cannot make bubbleDown
         if(( node.getLeft() == null ) && ( node.getRight() == null ))
             return;
-        if( node.getLeft() != null ){
-            if( node.getValue().compareTo( node.getLeft().getValue() ) < 0 ){
+
+        // if node has left and right children
+        if(( node.getLeft() != null ) && ( node.getRight() != null )){
+            if(( node.getValue().compareTo( node.getLeft().getValue() ) < 0 ) &&
+               ( node.getLeft().getValue().compareTo( node.getRight().getValue() ) > 0 ))
+            {
                 swapNodes( node, node.getLeft() );
                 bubbleDown( node.getLeft() );
-            }
-        }
-        if( node.getRight() != null ){
-            if( node.getValue().compareTo( node.getRight().getValue() ) < 0 ){
+            }else if( node.getValue().compareTo( node.getRight().getValue() ) < 0 ){
                 swapNodes( node, node.getRight() );
                 bubbleDown( node.getRight() );
             }
         }
+
+        // if left child only
+        if(( node.getLeft() != null ) && ( node.getValue().compareTo( node.getLeft().getValue() ) < 0 )){
+                swapNodes( node, node.getLeft() );
+                bubbleDown( node.getLeft() );
+        }
+
+        // if right child only
+        if(( node.getRight() != null ) && ( node.getValue().compareTo( node.getRight().getValue() ) < 0 )){
+                swapNodes( node, node.getRight() );
+                bubbleDown( node.getRight() );
+            }
     }
+
 
     /**
      * Performs the "bubble-Up" operation. So it checks, if

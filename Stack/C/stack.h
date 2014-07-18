@@ -113,4 +113,13 @@ Node *top( Stack *stack );
 void printStack( Stack *stack );
 
 
+//-----------------------------------------------------------
+/* Frees a Stack by first freeing all saved Nodes and then
+ * freeing the Stack itself.
+ *
+ * @param  stack  The stack to free.
+ */
+void freeStack( Stack *stack );
+
+
 #endif // stack.h

@@ -101,3 +101,19 @@ void printStack( Stack *stack )
         printf( "\n" );
     }
 }
+
+
+//------------------------------------------------
+void freeStack( Stack *stack )
+{
+    if( isEmpty( stack ) == -1 )
+    {
+        Node *tmp;
+        while( isEmpty( stack ) == -1 )
+        {
+            tmp = stack->sp;
+            stack->sp = stack->sp->next;
+            free( tmp );
+        }
+    }
+}

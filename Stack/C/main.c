@@ -31,5 +31,7 @@ int main( int argc, char *argv[] )
     printf( "   ### Current stack:\n\n" );
     printStack( stack );
 
+    freeStack( stack );
+
     return 0;
 }

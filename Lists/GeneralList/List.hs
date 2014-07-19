@@ -5,10 +5,14 @@ module List( List,              -- ^ abstract data type
              length,            -- ^ length of list
              elementAt,         -- ^ get element at index
              reverse,           -- ^ reverse list
-             concatenate        -- ^ concatenate lists
+             concatenate,       -- ^ concatenate lists
+             null,              -- ^ is list empty?
+             elem,              -- ^ is element included in list?
+             fromList,          -- ^ converting from Haskell-list
+             toList             -- ^ converting to Haskell-list
            ) where
 
-import Prelude hiding ( length, reverse )
+import Prelude hiding ( length, reverse, null, elem )
 
 
 -- ----------------------------------------------------------------------------
@@ -100,4 +104,36 @@ concatenate x   NIL = x
 concatenate NIL y   = y
 concatenate (Cons a b) l = Cons a (concatenate b l)
 
+
+-- ------------------------------------------------------------------------------
+-- checks, wheter a list is empty or not
+-- ------------------------------------------------------------------------------
+null :: List a -> Bool
+null NIL = True
+null _   = False
+
+
+-- ------------------------------------------------------------------------------
+-- checks, if a passed element is in a list
+-- ------------------------------------------------------------------------------
+elem :: Eq a => a -> List a -> Bool
+elem x NIL                    = False
+elem x (Cons a b) | x == a    = True
+                  | otherwise = elem x b
+
+
+-- ------------------------------------------------------------------------------
+-- converts a Haskell-list to this list
+-- ------------------------------------------------------------------------------
+fromList :: [a] -> List a
+fromList []     = NIL
+fromList (x:xs) = Cons x (fromList xs)
+
+
+-- ------------------------------------------------------------------------------
+-- converts a list to a Haskell-list
+-- ------------------------------------------------------------------------------
+toList :: List a -> [a]
+toList NIL        = []
+toList (Cons a b) = a : toList b
 

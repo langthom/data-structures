@@ -47,7 +47,6 @@ typedef struct __MinHeap__
 {
     Node *root;
     int size;
-    //Node *last; // pointer to last Node added
 } MinHeap;
 
 

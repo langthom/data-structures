@@ -56,6 +56,28 @@ $> ./[MODULE_NAME].py
 
 
 
+--- Erlang ---
+To test the Erlang programs, you need to habe the erlang programming 
+language installed.
+If installed, you can compile the code via
+
+$> erl -compile [MODULE_NAME].erl
+
+This will create a .beam file.
+After that, start the erlang-shell and execute the code:
+
+$> erl
+
+Now load the module ( without the  .erl extension ).
+
+$> l( MODULE_NAME )
+
+For more shell commands, please look at the  
+Official documentatino at: 
+        http://www.erlang.org/
+
+
+
 ... others may follow
 
 
@@ -80,3 +102,7 @@ type:
 $> sudo apt-get install python
 
 ... or emerge, pacman -S or what else your distributions supports.
+
+
+--- Erlang ---
+To compile Erlang code, you'll need the erlang programming language installed.

@@ -1,8 +1,8 @@
-/* Implementation of all functions from "min_heap.h".
+/* Implementation of all functions from "max_heap.h".
  * (C) Thomas Lang, 2014
  *
  * Here is the implementation. An extensive documentation can be
- * found in the header "min_heap.h".
+ * found in the header "max_heap.h".
  *
  * This code is licensed under the BSD3 license.
  */
@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "min_heap.h"
+#include "max_heap.h"
 
 //------------------ Node-specific functions -----------------------
 Node *newNode( int value )
@@ -64,11 +64,11 @@ void setParent( Node *node, Node *parent )
 }
 
 
-//------------------ MinHeap - specific functions -----------------
+//------------------ MaxHeap - specific functions -----------------
 
-MinHeap *newMinHeap()
+MaxHeap *newMaxHeap()
 {
-    MinHeap *heap = malloc( sizeof( MinHeap ));
+    MaxHeap *heap = malloc( sizeof( MaxHeap ));
     heap->root = NULL;
     heap->size = 0;
     return heap;
@@ -76,34 +76,34 @@ MinHeap *newMinHeap()
 
 static Node *last = NULL; // pointer to last element added
 
-int isEmpty( MinHeap *heap )
+int isEmpty( MaxHeap *heap )
 {
     if( heap->root == NULL )
         return 0;
     return (-1);
 }
 
-int getSize( MinHeap *heap )
+int getSize( MaxHeap *heap )
 {
     return heap->size;
 }
 
-void increaseSize( MinHeap *heap )
+void increaseSize( MaxHeap *heap )
 {
     heap->size++;
 }
 
-void decreaseSize( MinHeap *heap )
+void decreaseSize( MaxHeap *heap )
 {
     heap->size--;
 }
 
-Node *getRoot( MinHeap *heap )
+Node *getRoot( MaxHeap *heap )
 {
     return heap->root;
 }
 
-void setRoot( MinHeap *heap, Node *node )
+void setRoot( MaxHeap *heap, Node *node )
 {
     heap->root = node;
 }
@@ -136,7 +136,7 @@ void bubbleUp( Node *node )
 {
     if( getParent( node ) == NULL )
         return;
-    if( getValue( getParent( node )) > getValue( node ) )
+    if( getValue( getParent( node )) < getValue( node ) )
     {
         swapNodes( node, getParent( node ));
         bubbleUp( getParent( node ));
@@ -149,26 +149,26 @@ void bubbleDown( Node *node )
         return;
     if(( getLeft( node ) != NULL ) && ( getRight( node ) != NULL ))
     {
-        if(( getValue( node ) > getValue( getLeft( node ))) &&
-           ( getValue( getLeft( node )) < getValue( getRight( node )) ))
+        if(( getValue( node ) < getValue( getLeft( node ))) &&
+           ( getValue( getLeft( node )) > getValue( getRight( node )) ))
         {
             swapNodes( node, getLeft( node ));
             bubbleDown( getLeft( node ));
         }
-        else if( getValue( node ) > getValue( getRight( node )))
+        else if( getValue( node ) < getValue( getRight( node )))
         {
             swapNodes( node, getRight( node ));
             bubbleDown( getRight( node ));
         }
     }
 
-    if(( getLeft( node ) != NULL ) && ( getValue( node ) > getValue( getLeft( node ))))
+    if(( getLeft( node ) != NULL ) && ( getValue( node ) < getValue( getLeft( node ))))
     {
         swapNodes( node, getLeft( node ));
         bubbleDown( getLeft( node ));
     }
     
-    if(( getRight( node ) != NULL ) && ( getValue( node ) > getValue( getRight( node ))))
+    if(( getRight( node ) != NULL ) && ( getValue( node ) < getValue( getRight( node ))))
     {
         swapNodes( node, getRight( node ));
         bubbleDown( getRight( node ));
@@ -207,7 +207,7 @@ void insertRec( Node *node, Node *newNode )
     }
 }
 
-void insertNode( MinHeap *heap, Node *node )
+void insertNode( MaxHeap *heap, Node *node )
 {
     if( isEmpty( heap ) == 0 )
     {
@@ -221,7 +221,7 @@ void insertNode( MinHeap *heap, Node *node )
     increaseSize( heap );
 }
 
-void insert( MinHeap *heap, int value )
+void insert( MaxHeap *heap, int value )
 {
     Node *node = newNode( value );
     insertNode( heap, node );
@@ -229,7 +229,7 @@ void insert( MinHeap *heap, int value )
 }
 
 
-void deleteMin( MinHeap *heap )
+void deleteMax( MaxHeap *heap )
 {
     if( isEmpty( heap ) == 0 )
     {
@@ -267,7 +267,7 @@ void printRec( Node *node )
         printRec( getRight( node ));
 }
 
-void print( MinHeap *heap )
+void print( MaxHeap *heap )
 {
     if( isEmpty( heap ) == 0 )
         printf( "(empty heap)" );
@@ -285,7 +285,7 @@ void freeHeapRec( Node *node )
         free( node );
 }
 
-void freeHeap( MinHeap *heap )
+void freeHeap( MaxHeap *heap )
 {
     if( isEmpty( heap ) == 0 )
         free( heap );

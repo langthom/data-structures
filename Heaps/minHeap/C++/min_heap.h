@@ -45,7 +45,7 @@ template <typename T> class MinHeap : public Heap<T>
             if( !node->getLeft() && !node->getRight() )
                 return;
 
-            if( node->getLeft() && !node->getRight() )
+            if( node->getLeft() && node->getRight() )
             {
                 if(( node->getValue() > node->getLeft()->getValue() ) &&
                    ( node->getLeft()->getValue() < node->getRight()->getValue() ))

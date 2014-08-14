@@ -19,7 +19,7 @@ module Graph(
               Graph,        -- ^ data type
               adj,          -- ^ are two nodes adjacent?
               adjList,      -- ^ adjList of a Node
-              dfs           -- ^ depth-first-search
+              --dfs           -- ^ depth-first-search
             )where
 
 
@@ -48,23 +48,11 @@ adj v w g = (v,w) `elem` g
 
 
 -- --------------------------------------------------------------
--- returns a list of edges that are adjacent to the passed node
+-- returns a list of nodes that are adjacent to the passed node
 -- --------------------------------------------------------------
-adjList :: Eq a => Node a -> Graph a -> Graph a
-adjList v g = filter (\(x,y) -> x==v) g
+adjList :: Eq a => Node a -> Graph a -> [Node a] 
+adjList v g = let x = filter (\(x,y) -> x==v) g
+              in map snd x
 
-
-
--- --------------------------------------------------------------
--- performs a depth-first search on the passed graph
--- Note that the starting Node ist the first one 
--- appearing in the Graph.
---
--- Note: not working yet
--- --------------------------------------------------------------
-dfs :: Eq a => Graph a -> [Node a]
-dfs [] = []
-dfs g  = let top = fst (head g)
-         in top : dfs (adjList top (tail g))
 
 

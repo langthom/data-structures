@@ -19,8 +19,12 @@ module Graph(
               Graph,        -- ^ data type
               adj,          -- ^ are two nodes adjacent?
               adjList,      -- ^ adjList of a Node
-              --dfs           -- ^ depth-first-search
+              contains,     -- ^ is a node in the graph?
+              add,          -- ^ adds a new edge to graph
+              remove        -- ^ removes a node from the graph
             )where
+
+import Data.List 
 
 
 -- --------------------------------------------------------------
@@ -55,4 +59,26 @@ adjList v g = let x = filter (\(x,y) -> x==v) g
               in map snd x
 
 
+-- --------------------------------------------------------------
+-- checks if the passed graph contains the passed node
+-- --------------------------------------------------------------
+contains :: Eq a => Graph a -> Node a -> Bool
+contains []         _             = False
+contains ((x,_):xs) n | n == x    = True
+                      | otherwise = contains xs n
 
+
+-- --------------------------------------------------------------
+-- adds a new edge to the graph
+-- --------------------------------------------------------------
+add :: Edge a -> Graph a -> Graph a
+add e g = e : g
+
+
+-- --------------------------------------------------------------
+-- removes a node from the graph
+-- --------------------------------------------------------------
+remove :: Eq a => Node a -> Graph a -> Maybe (Graph a)
+remove n [] = Nothing
+remove n g | g `contains` n = Just $ g \\ filter (\(u,_) -> u == n) g
+           | otherwise      = Nothing

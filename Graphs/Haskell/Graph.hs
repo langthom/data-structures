@@ -8,7 +8,7 @@ Stability   :   stable
 Portability :   portable
 
 This module implements a typical DIRECTED graph.
-Such a graph is simple a list of edges, while an 
+Such a graph is simple a list of edges, while an
 edge is a tuple from the first Node to the second
 one. Furthermore it implements a few functions
 and algorithms that are typical for graphs, like
@@ -24,7 +24,7 @@ module Graph(
               remove        -- ^ removes a node from the graph
             )where
 
-import Data.List 
+import Data.List
 
 
 -- --------------------------------------------------------------
@@ -54,9 +54,16 @@ adj v w g = (v,w) `elem` g
 -- --------------------------------------------------------------
 -- returns a list of nodes that are adjacent to the passed node
 -- --------------------------------------------------------------
-adjList :: Eq a => Node a -> Graph a -> [Node a] 
+adjList :: Eq a => Node a -> Graph a -> [Node a]
 adjList v g = let x = filter (\(x,y) -> x==v) g
               in map snd x
+
+
+-- --------------------------------------------------------------
+-- returns the size of the graph ( the number of nodes in it )
+-- --------------------------------------------------------------
+size :: Graph a -> Int
+size = length
 
 
 -- --------------------------------------------------------------

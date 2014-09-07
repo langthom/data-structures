@@ -20,6 +20,7 @@ module Graph(
               Graph,        -- ^ data type
               adj,          -- ^ are two nodes adjacent?
               adjList,      -- ^ adjList of a Node
+              size,         -- ^ size of graph (# Nodes)
               contains,     -- ^ is a node in the graph?
               add,          -- ^ adds a new edge to graph
               remove,       -- ^ removes a node from the graph
@@ -58,8 +59,10 @@ adj v w g = (v,w) `elem` g
 -- returns a list of nodes that are adjacent to the passed node
 -- --------------------------------------------------------------
 adjList :: Eq a => Node a -> Graph a -> [Node a]
-adjList v g = let x = filter (\(x,y) -> x==v) g
-              in map snd x
+adjList v g = map snd (adjList' v g)
+
+adjList' :: Eq a => Node a -> Graph a -> Graph a
+adjList' v g = filter (\(x,y) -> x==v) g
 
 
 -- --------------------------------------------------------------
@@ -130,5 +133,14 @@ isAzyclical :: Eq a => Graph a -> Bool
 isAzyclical g = g \\ ts == []
     where ts = [(u,v)|u <- topSort g, v <- s]
           s  = [x | let a = map snd g, x <- a]
+
+
+
+
+
+dfs :: Node a -> Graph a -> [Node a]
+dfs _ [] = []
+--dfs n g  = n : map (\v -> dfs v g) (adjList n g)
+
 
 

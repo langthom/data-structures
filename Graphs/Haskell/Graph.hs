@@ -48,11 +48,17 @@ test = [(1,2),(2,3),(1,4),(2,4)]
 
 
 -- --------------------------------------------------------------
+-- checks if the graph is empty
+-- --------------------------------------------------------------
+isEmpty :: Graph a -> Bool
+isEmpty = null
+
+
+-- --------------------------------------------------------------
 -- checks if two passed nodes are adjacent
 -- --------------------------------------------------------------
 adj :: Eq a => Node a -> Node a -> Graph a -> Bool
 adj v w g = (v,w) `elem` g
-
 
 
 -- --------------------------------------------------------------
@@ -61,6 +67,10 @@ adj v w g = (v,w) `elem` g
 adjList :: Eq a => Node a -> Graph a -> [Node a]
 adjList v g = map snd (adjList' v g)
 
+
+-- --------------------------------------------------------------
+-- returns a list of edges that are adjacent to the passed node
+-- --------------------------------------------------------------
 adjList' :: Eq a => Node a -> Graph a -> Graph a
 adjList' v g = filter (\(x,y) -> x==v) g
 
@@ -133,7 +143,6 @@ isAzyclical :: Eq a => Graph a -> Bool
 isAzyclical g = g \\ ts == []
     where ts = [(u,v)|u <- topSort g, v <- s]
           s  = [x | let a = map snd g, x <- a]
-
 
 
 

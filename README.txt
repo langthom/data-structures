@@ -77,6 +77,12 @@ Official documentatino at:
         http://www.erlang.org/
 
 
+--- C# ---
+To compile and execute C# code, you will have to have installed
+a C# compiler (gmcs recommended), and an executer (mono recommended).
+
+$> gmcs MODULE_NAME.cs
+$> mono MODULE_NAME.exe
 
 
 ---- What do you need? ---

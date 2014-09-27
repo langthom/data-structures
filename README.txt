@@ -42,6 +42,14 @@ If this is existant, just type into your console:
 $> runghc Main.hs
 
 
+--- Lisp ---
+Here, all Lisp files are written in the "Common Lisp" dialect.
+To execute the files, you have to have installed a lisp interpreter,
+I recommend "CLisp".
+
+$> clisp [MODULE_NAME].lisp
+
+
 --- Python ---
 As Python is an interpreted language, just typ in on your console:
 

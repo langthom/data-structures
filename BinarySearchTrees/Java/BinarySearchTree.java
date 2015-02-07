@@ -1,13 +1,13 @@
-// BinarySearchTree.java - Implementation of a binary search tree
-
 import java.util.Queue;
+import java.util.List;
 import java.util.LinkedList;
+import java.util.stream.*;
 
 /**
  * Implementation of a generic binary search tree in Java.
  *
  * @author  Thomas Lang
- * @version 0.2
+ * @version 1.0, 04/02/2015
  */
 public class BinarySearchTree<T extends Comparable<T>>{
 
@@ -15,225 +15,214 @@ public class BinarySearchTree<T extends Comparable<T>>{
      * Class representing a single Node of the tree.
      *
      * @author  Thomas Lang
-     * @version 0.1
+     * @version 1.0, 04/02/2015
      */
     private class Node<T extends Comparable<T>>{
+        
+        /** Value of the node. */
         private T value;
-        private Node<T> left;
-        private Node<T> right;
-        private Node<T> parent;
-        private int bfsnum;
 
+        /** Reference to the left child. */
+        private Node<T> left;
+        
+        /** Reference to the right child. */
+        private Node<T> right;
+        
+        /** Reference to the parent node. */
+        private Node<T> parent;
+ 
         /**
          * Constructor, saves the passed generic value.
          *
-         * @param  value   The value to save
+         * @param  value
+         *              The value to save
          */
-        private Node( T value ){
+        private Node(T value){
             this.value = value;
-            left = right = parent = null;
-            bfsnum = 0;
         }
 
         /**
-         * String representation of a node.
+         * Returns the value of the node.
          *
-         * @return  String representation
+         * @return Returns the value of the node.
          */
+        public T getValue() {
+            return value;
+        }
+
+        /**
+         * Gets a String representation of a node which is simply its value.
+         *
+         * @return A String representation of a node.
+         */
+        @Override
         public String toString(){
-            return ( "{" + value + "}" );
+            return "" + value;
         }
     }
 
-
-    // root node of the whole tree, we only have one
-    // root node in a BINARY search tree
+    /** The root of the entire tree. */
     Node<T> root;
+
+    /** The size of the tree which represents the number of elements in it. */
+    int size;
 
     /**
      * Constructor, initializes the tree to null.
      */
-    public BinarySearchTree(){ root = null; }
+    public BinarySearchTree() { 
+        root = null; 
+    }
 
     /**
      * Adds a new node containing the value "value".
      *
      * @param  value   Value to insert.
+     * @return {@code true} if the element is not inserted into the tree yet,
+     *         {@code false} otherwise.
      */
-    public void add( T value ){
-        if( this.isEmpty() ){
-            root = new Node<T>( value );
-        }else{
-            insertInTree( root, value );
+    public boolean add(T value) {
+
+        if (isEmpty()) {
+            root = new Node<T>(value);
+            ++size;
+            return true;
+        } else {
+            return insertInTree(root, value);
         }
     }
 
     /**
-     * Inserts a new node containing the value "value"
-     * to the binary search tree by using it's property
-     * that all elements with a smaller value than the
-     * actual node are left of this, the ones greater
-     * then the actual node are right of it.
+     * Inserts a new node containing the value "value" to the binary search 
+     * tree by using it's property that all elements with a smaller value than 
+     * the actual node are left of this, the ones greater then the actual node
+     * are right of it.
      *
      * @param  node   Actual node, for traversing
      * @param  value  Value to insert.
+     * @return {@code true} if the element was not inserted into the tree yet,
+     *         {@code false} otherwise.
      */
-    private void insertInTree( Node<T> node, T value ){
-        if( value.compareTo( node.value ) < 0 ){
-            if( node.left != null ){
-                insertInTree( node.left, value );
-            }else{
-                node.left = new Node<T>( value );
+    private boolean insertInTree(Node<T> node, T value) {
+        
+        if (value.compareTo(node.value) < 0) {
+            if (node.left != null) {
+                return insertInTree(node.left, value);
+            } else {
+                node.left = new Node<T>(value);
                 node.left.parent = node;
+                ++size;
+                return true;
             }
-        }else if( value.compareTo( node.value ) > 0 ){
-            if( node.right != null )
-                insertInTree( node.right, value );
-            else{
-                node.right = new Node<T>( value );
+        } else if (value.compareTo(node.value) > 0) {
+            if (node.right != null) {
+                return insertInTree(node.right, value);
+            } else {
+                node.right = new Node<T>(value);
                 node.right.parent = node;
+                ++size;
+                return true;
             }
-        }else{
-            return;     // no duplicates allowed
+        } else {
+            return false; // no duplicates allowed
         }
     }
 
     /**
-     * Traverses the tree in Preorder.
-     */
-    public void traversePreorder(){
-        if( root != null )
-            traversePreorderRec( root );
-        System.out.println();
-    }
-
-    /**
-     * Traversing by first printing the current
-     * node, then stepping through the left and
-     * lastly through the right subtree.
+     * Returns a list containing all elements from the tree.
      *
-     * @param  node  Current node.
+     * @return A list containing all elements from the tree.
      */
-    private void traversePreorderRec( Node<T> node ){
-        System.out.print( node );
-        if( node.left != null )
-            traversePreorderRec( node.left );
-        if( node.right != null )
-            traversePreorderRec( node.right );
-    }
+    public List<T> getAll() {
+        List<T> all = new LinkedList<T>();
+        Queue<Node<T>> queue = new LinkedList<Node<T>>();
+        all.add(root.getValue());
+        queue.offer(root);
 
-    /**
-     * Traverses the tree in Inorder direction.
-     */
-    public void traverseInorder(){
-        if( root != null )
-            traverseInorderRec( root );
-        System.out.println();
-    }
+        while (!queue.isEmpty()) {
+            final Node<T> currentNode = queue.poll();
+            final Node<T> leftChild = currentNode.left;
+            final Node<T> rightChild = currentNode.right;
 
-    /**
-     * Traversing by first stepping throug the left
-     * subtree of the current node, then printing it
-     * and lastly stepping through the right subtree.
-     *
-     * @param  node  Current node.
-     */
-    private void traverseInorderRec( Node<T> node ){
-        if( node.left != null )
-            traverseInorderRec( node.left );
-        System.out.print( node );
-        if( node.right != null )
-            traverseInorderRec( node.right );
-    }
+            if (leftChild != null) {
+                all.add(leftChild.getValue());
+                queue.offer(leftChild);
+            }
 
-    /**
-     * Traverses the tree in Postorder direction.
-     */
-    public void traversePostorder(){
-        if( root != null )
-            traversePostorderRec( root );
-        System.out.println();
-    }
-
-    /**
-     * Traversing by first stepping through the left 
-     * and the right subtree of the current node and
-     * lastly printing the current node.
-     *
-     * @param  node  Current node.
-     */
-    private void traversePostorderRec( Node<T> node ){
-        if( node.left != null )
-            traversePostorderRec( node.left );
-        if( node.right != null )
-            traversePostorderRec( node.right );
-        System.out.print( node );
-    }
-
-    /**
-     * Traversing in breadth-first order by using a Queue.
-     * Each child of a node is offered to the Queue. Then the
-     * first node is removed from it and all it's children is
-     * offered, until the Queue is not empty.
-     */
-    public void traverseBreadthFirst(){
-        Queue<Node> q = new LinkedList<Node>();
-        q.offer( root ); int bfscount = 1; root.bfsnum = bfscount;
-        while( !q.isEmpty() ){
-            Node<T> v = q.poll();
-            System.out.print( v );
-            bfscount++;v.bfsnum = bfscount;
-            if( v.left != null )
-                q.offer( v.left );
-            if( v.right != null )
-                q.offer( v.right );
+            if (rightChild != null) {
+                all.add(rightChild.getValue());
+                queue.offer(rightChild);
+            }
         }
-        System.out.println();
+
+        return all;
     }
 
+    /**
+     * Clears the entire tree so that no elements are in it after this.
+     */
+    public void clear() {
+        root = null;
+    }
 
     /**
      * Deletes the node containing the value "element" from the tree.
      *
      * @param  element  Value of the node-to-delete.
+     * @return {@code true} if the element was deleted successfully, 
+     *         {@code false} otherwise.
      */
-    public void delete( T element ){
-        if( isEmpty() )
-            System.err.println( "Error! Cannot delete from empty Tree." );
-        Node<T> nodeToDelete = findNode( element );
-        if( nodeToDelete != null ){
-            if( nodeToDelete.value.compareTo( root.value ) == 0 )
+    public boolean delete(T element) {
+        
+        if (isEmpty()) {
+            return false;
+        }
+
+        Node<T> nodeToDelete = findNode(element);
+
+        if (nodeToDelete != null) {
+            if (nodeToDelete.value.compareTo(root.value) == 0) {
                 deleteRoot();
-            else if( nodeToDelete.left != null && nodeToDelete.right != null )
-                deleteInternalNode( nodeToDelete );
-            else 
-                deleteNode( nodeToDelete );
+            } else if ((nodeToDelete.left != null) && (nodeToDelete.right != null)) {
+                deleteInternalNode(nodeToDelete);
+            } else { 
+                deleteNode(nodeToDelete);
+            }
+
+            --size;
+            return true;
         }else{
-            System.err.println( "Error! Element not found" );
+            return false; // element not found
         }
     }
 
     /**
      * Deletes the root element.
      */
-    private void deleteRoot(){
-        deleteInternalNode( root );
+    private void deleteRoot() {
+        deleteInternalNode(root);
     }
 
     /**
-     * Deletes an internal node by swapping the 
-     * node-to-delete with the next-smaller node
-     * (which has either none or one child), and
-     * then deleting this node.
+     * Deletes an internal node by swapping the node-to-delete with the 
+     * next-smaller node (which has either none or one child), and then 
+     * deleting this node.
      *
      * @param  node  Node-to-delete.
      */
-    private void deleteInternalNode( Node<T> node ){
+    private void deleteInternalNode(Node<T> node) {
         // deleting internal node by swapping with
         // maximum of left child-subtree
-        Node<T> maxOfMin  = findMaxOfMinNode( node );
+        assert node != null : "Parameter must not be null.";
+
+        Node<T> maxOfMin  = findMaxOfMinNode(node);
+        
+        if (maxOfMin == null) {
+            return;
+        }
+
         node.value = maxOfMin.value;
-        deleteNode( maxOfMin );
+        deleteNode(maxOfMin);
     }
 
     /**
@@ -241,31 +230,32 @@ public class BinarySearchTree<T extends Comparable<T>>{
      *
      * @param  node  The node to delete.
      */
-    private void deleteNode( Node<T> node ){
-        if(( node.left == null ) && ( node.right == null )){
-            if( node.parent.right.value.compareTo( node.value ) == 0 ){
+    private void deleteNode(Node<T> node) {
+
+        if ((node.left == null) && (node.right == null)) {
+            if (node.parent.right.value.compareTo(node.value) == 0) {
                 node.parent.right = null;
                 node.parent = null;
-            }else{
+            } else {
                 node.parent.left = null;
                 node.parent = null;
             }
-        }else if( node.left != null ){
-            if( node.parent.right.value.compareTo( node.value ) == 0 ){
+        } else if (node.left != null) {
+            if (node.parent.right.value.compareTo(node.value) == 0) {
                 node.parent.right = node.left;
                 node.left.parent = node.parent;
                 node.parent = null;
-            }else{
+            } else {
                 node.parent.left = node.left;
                 node.left.parent = node.parent;
                 node.parent = null;
             }
-        }else{
-            if( node.parent.right.value.compareTo( node.value ) == 0 ){
+        } else {
+            if (node.parent.right.value.compareTo(node.value) == 0){
                 node.parent.left = node.right;
                 node.right.parent = node.parent;
                 node.parent = null;
-            }else{
+            } else {
                 node.parent.right = node.right;
                 node.right.parent = node.parent;
                 node.parent = null;
@@ -274,17 +264,31 @@ public class BinarySearchTree<T extends Comparable<T>>{
     }
 
     /**
+     * Checks if the passed {@code element} is contained within this tree or
+     * not.
+     *
+     * @param element
+     *              The element to search for, which must not be null.
+     * @return {@code true} if the element is contained within this tree, 
+     *         {@code false} otherwise.
+     */
+    public boolean contains(T element) {
+        return findNode(element) != null;
+    }
+
+    /**
      * Finds a node containing the value "element" in the tree.
      *
      * @param   element  Value of the Node-to-Find
-     * @return  The node with the value "element", null otherwise.
+     * @return  The node with the value "element", {@code null} otherwise.
      */
-    public Node<T> findNode( T element ){
-        if( isEmpty() ) 
-            System.err.println( "Error! No elements in Empty Tree." );
-        else
-            return findNodeRec( root, element );
-        return null;
+    public Node<T> findNode(T element) {
+        
+        if(isEmpty()) {
+            return null;
+        } else {
+            return findNodeRec(root, element);
+        }
     }
 
     /**
@@ -293,16 +297,21 @@ public class BinarySearchTree<T extends Comparable<T>>{
      *
      * @param  node     Current node.
      * @param  element  Value of the node-to-find.
-     * @return The node, if found, null otherwise.
+     * @return The node, if found, {@code null} otherwise.
      */
-    private Node<T> findNodeRec( Node<T> node, T element ){
-        if( node.value.equals( element ) )
+    private Node<T> findNodeRec(Node<T> node, T element){
+       
+        if (node == null) {
+            return null;
+        }
+
+        if (node.value.equals(element)) {
             return node;
-        else if( node.value.compareTo( element ) < 0 )
-            findNodeRec( node.left, element );
-        else
-            findNodeRec( node.right, element );
-        return null;
+        } else if (node.value.compareTo(element) < 0) {
+            return findNodeRec(node.left, element);
+        } else {
+            return findNodeRec(node.right, element);
+        }
     }
 
     /**
@@ -313,12 +322,15 @@ public class BinarySearchTree<T extends Comparable<T>>{
      */
     public Node<T> findMaxOfMinNode( Node<T> node ){
         Node<T> leftChild = null;
-        if( node.left != null ){
+        
+        if (node.left != null) {
             leftChild = node.left;
-            while( leftChild.right != null ){
+
+            while (leftChild.right != null) {
                 leftChild = leftChild.right;
             }
         }
+
         return leftChild;
     }
 
@@ -327,33 +339,139 @@ public class BinarySearchTree<T extends Comparable<T>>{
      *
      * @return true if tree is empty, false otherwise
      */
-    public boolean isEmpty(){ return ( root == null ); }
+    public boolean isEmpty() { 
+        return root == null; 
+    }
 
     /**
-     * Prints the calling tree.
+     * Returns the number of {@code Nodes} currently stored in the tree.
+     *
+     * @return The size of the tree.
      */
-    public void printTree(){
-        if( isEmpty() )
-            System.out.println( "( empty tree )" );
-        else{
-            System.out.println( "Root: " + root );
-            printTreeRec( root );
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Traverses the tree recursively in preorder direction.<p>
+     * This means it first prints out the current {@code node} and then going
+     * into the left and right subtrees.
+     * If the tree is empty, nothing will be done.
+     */
+    public void traversePreorder() {
+        if (!isEmpty()) {
+            traversePreorder(root);
         }
     }
 
     /**
-     * Prints the tree recursively.
+     * Recursive preorder traversing function.
      *
-     * @param  node  The current node.
+     * @param node
+     *          The current node during the recursion.
      */
-    private void printTreeRec( Node<T> node ){
-        if( node.left != null )
-            System.out.println( "Left: " + node.left );
-        if( node.right != null )
-            System.out.println( "Right: " + node.right );
-        if( node.left != null )
-            printTreeRec( node.left );
-        if( node.right != null )
-            printTreeRec( node.right );
+    private void traversePreorder(Node<T> node) {
+        System.out.println(node);
+
+        if (node.left != null) {
+            traversePreorder(node.left);
+        }
+
+        if (node.right != null) {
+            traversePreorder(node.right);
+        }
+    }
+
+    /**
+     * Traverses the tree recursively in inorder direction.<p>
+     * This means it first goes into the left subtree, then printing out the
+     * current {@code node} and finally going into the right subtree.
+     * If the tree is empty, nothing will be done.
+     */
+    public void traverseInorder() {
+        if (!isEmpty()) {
+            traverseInorder(root);
+        }
+    }
+
+    /**
+     * Recursive inorder traversing function.
+     *
+     * @param node
+     *          The current node during the recursion.
+     */
+    private void traverseInorder(Node<T> node) {
+        if (node.left != null) {
+            traverseInorder(node.left);
+        }
+
+        System.out.println(node);
+
+        if (node.right != null) {
+            traverseInorder(node.right);
+        }
+    }
+
+    /**
+     * Traverses the tree recursively in postorder direction.<p>
+     * This means it first goes down the left and the right subtrees and
+     * finally printing out the current {@code node} itself.
+     * If the tree is empty, nothing will be done.
+     */
+    public void traversePostorder() {
+        if (!isEmpty()) {
+            traversePostorder(root);
+        }
+    }
+
+    /**
+     * Recursive postorder traversing function.
+     *
+     * @param node
+     *          The current node during the recursion.
+     */
+    private void traversePostorder(Node<T> node) {
+        if (node.left != null) {
+            traversePostorder(node.left);
+        }
+
+        if (node.right != null) {
+            traversePostorder(node.right);
+        }
+
+        System.out.println(node);
+    }
+
+    /**
+     * Traverses the tree in breadth-first direction.
+     */
+    public void traverseBreadthFirst() {
+        getAll().stream().forEach(e -> System.out.print(e + ", "));
+        System.out.println();
+    }
+
+    /**
+     * Returns a String representation of a binary search tree.<p>
+     * This representation simply are the nodes as the tree is traversed
+     * in breadth first search.
+     *
+     * @return A String representation of a binary search tree.
+     */
+    @Override
+    public String toString() {
+
+        if (isEmpty()) {
+            return "(empty tree)";
+        } else {
+            StringBuilder repr = new StringBuilder();
+            getAll().stream().forEach(elem -> 
+                    { 
+                        repr.append(elem); 
+                        repr.append(", "); 
+                    });
+            final int len = repr.length();
+            repr.delete(len - 2, len - 1);
+            return repr.toString();
+        }
     }
 }

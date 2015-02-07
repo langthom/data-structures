@@ -21,8 +21,7 @@ public class Main{
         tree.add( 42 );
 
         System.out.println( "*** Printing actual tree: \n" );
-        tree.printTree();
-
+        System.out.println(tree);
         System.out.println( "\n*** Traversing:\n### Preorder-travsersing: " );
         tree.traversePreorder();
         System.out.println();
@@ -40,6 +39,6 @@ public class Main{
         tree.delete( 5 );
 
         System.out.println( "*** Printing actual tree: " );
-        tree.printTree();
+        System.out.println(tree);
     }
 }

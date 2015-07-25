@@ -183,7 +183,7 @@ public class AVLTree<T extends Comparable<T>> {
     private void rotate(Node<T> node, boolean deletion) {
         assert node != null : "Null node passed.";
 
-        if (node == root && node.left == null && node.right == null) {
+        if ((node == root) && (node.left == null) && (node.right == null)) {
             /*
              * If we have the pure root node here, which does not have any
              * children in this pure case, we need not to rotate anything.

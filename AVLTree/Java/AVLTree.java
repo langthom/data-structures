@@ -450,7 +450,6 @@ public class AVLTree<T extends Comparable<T>> {
         Node<T> maxOfMin = findMaxOfMinNode(node);
 
         if (maxOfMin == null) {
-            System.out.println("no max-min");
             return;
         }
 

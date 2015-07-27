@@ -83,12 +83,12 @@ class AVLTree {
         Node<T> *get(T value);
         void clear();
 
-		/*
-		 * Checks if the tree is empty (if it has no elements).
-		 *
-		 * @return Returns either {@code true} if the tree is empty, 
+        /*
+         * Checks if the tree is empty (if it has no elements).
+         *
+         * @return Returns either {@code true} if the tree is empty, 
          *         {@code false} otherwise.
-		 */
+         */
         bool isEmpty() { return size == 0; }
 
         /*

@@ -75,7 +75,7 @@ class AVLTree {
     public:
         /* Creates a new instance of this class and initializes it. */
         AVLTree() : size(0), root(NULL) {}
-
+        AVLTree(const AVLTree &tree) {}
         ~AVLTree();
         bool contains(T value);
         bool insert(T value);

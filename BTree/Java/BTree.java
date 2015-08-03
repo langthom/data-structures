@@ -102,7 +102,7 @@ public class BTree<T extends Comparable<T>> {
     /**
      * Clears the tree.
      */
-    public void clear() {
+    public synchronized void clear() {
         root = null;
         size = 0;
     }
@@ -125,7 +125,7 @@ public class BTree<T extends Comparable<T>> {
      * @see #get(Node<T>, T)
      * @see #rebalance(Node<T>)
      */
-    public boolean insert(T value) {
+    public synchronized boolean insert(T value) {
 
         if (isEmpty()) {
             Node<T> node = new Node<>();
@@ -411,7 +411,7 @@ public class BTree<T extends Comparable<T>> {
      *         An {@code IllegalStateException} will be thrown if there could 
      *         not be found any node that could/should contain the value.
      */
-    public boolean remove(T value) {
+    public synchronized boolean remove(T value) {
 
         if (isEmpty()) {
             return false;
@@ -719,7 +719,7 @@ public class BTree<T extends Comparable<T>> {
          *         {@code false} otherwise.
          * @see BTree#BTree()
          */
-        boolean isFull() {
+        synchronized boolean isFull() {
             return values.size() > 2 * degree;
         }
 
@@ -730,7 +730,7 @@ public class BTree<T extends Comparable<T>> {
          * @return Returns either {@code true} if the node is a leaf node or
          *         {@code false} otherwise.
          */
-        boolean isLeaf() {
+        synchronized boolean isLeaf() {
             ArrayList<Node<T>> refCopy = new ArrayList<Node<T>>();
             refCopy.addAll(refs);
             refCopy.removeIf(c -> c == null);
@@ -744,7 +744,7 @@ public class BTree<T extends Comparable<T>> {
          * @return Returns either {@code true} if the node has an underflow or
          *         {@code false} otherwise.
          */
-        boolean underflow() {
+        synchronized boolean underflow() {
             return values.size() < degree;
         }
 

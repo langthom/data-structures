@@ -39,8 +39,12 @@ import java.util.ListIterator;
  * {@code O(log n)} where {@code n} denotes the size of the tree, both in 
  * average and worst case.
  *
+ * @param <T>
+ *         Type parameter where any sub type of {@code Object} can be set in
+ *         unless this type implements the {@code Comparable} interface.
+ *
  * @author Thomas Lang
- * @version 1.2, 2015-08-03
+ * @version 1.3, 2015-08-03
  * @see <a href="https://en.wikipedia.org/wiki/B-tree">B-trees on Wikipedia</a>
  * @see #BTree()
  */
@@ -678,8 +682,12 @@ public class BTree<T extends Comparable<T>> {
      *   <li>A pointer to the parent node.</li>
      * </ol>
      *
+     * @param <T>
+     *         Type parameter where any sub type of {@code Object} can be set
+     *         in unless this type implements the {@code Comparable} interface.
+     *
      * @author Thomas Lang
-     * @version 1.1, 2015-08-03
+     * @version 1.2, 2015-08-03
      */
     class Node<T extends Comparable<T>> {
 

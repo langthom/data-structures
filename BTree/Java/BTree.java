@@ -40,7 +40,7 @@ import java.util.ListIterator;
  * average and worst case.
  *
  * @author Thomas Lang
- * @version 1.0, 2015-08-02
+ * @version 1.1, 2015-08-03
  * @see <a href="https://en.wikipedia.org/wiki/B-tree">B-trees on Wikipedia</a>
  * @see #BTree()
  */
@@ -263,6 +263,18 @@ public class BTree<T extends Comparable<T>> {
         leftChild.parent = parent;
         rightChild.parent = parent;
 
+        leftChild.refs.stream().forEach(c -> {
+            if (c != null) {
+                c.parent = leftChild;
+            }
+        });
+
+        rightChild.refs.stream().forEach(c -> {
+            if (c != null) {
+                c.parent = rightChild;
+            }
+        });
+
         /*
          * The insertion of the median into the parent node may cause the 
          * parent node to become overfull, so we have to check if we must 
@@ -369,6 +381,109 @@ public class BTree<T extends Comparable<T>> {
         return node;
     }
 
+    public boolean remove(T value) {
+
+        if (isEmpty()) {
+            return false;
+        }
+
+        final Node<T> node = get(root, value);
+
+        if (!node.values.contains(value)) {
+            return false;
+        }
+
+        final Node<T> parent = node.parent;
+
+        if (node.isLeaf()) {
+            node.values.remove(value);
+            
+            if (node.underflow()) {
+                rebalanceAfterDeletion(node);
+            }
+        } else {
+            // TODO: implement deleting a non-leaf node
+        }
+
+        return true;
+    }
+
+    private void rebalanceAfterDeletion(Node<T> node) {
+        assert node != null : "Null node passed.";
+
+        if (!node.underflow()) {
+            return;
+        }
+
+        final Node<T> parent = node.parent;
+        Node<T> leftSibling = null, rightSibling = null;
+        int leftSiblingIndex = -1, rightSiblingIndex = -1;
+        ListIterator<Node<T>> refIt = parent.refs.listIterator();
+
+        T separator = null;
+
+        if (parent.refs.get(parent.refs.size() - 1) == node) {
+            /*
+             * Here is the special case that the current node is the outermost
+             * node of its parent.
+             */
+            leftSiblingIndex = parent.refs.size() - 2;
+            rightSiblingIndex = parent.refs.size() - 1;
+            leftSibling = parent.refs.get(leftSiblingIndex);
+            rightSibling = parent.refs.get(rightSiblingIndex);
+            separator = parent.values.get(parent.values.size() - 1);
+        } else {
+            while (refIt.hasNext()) {
+                final Node<T> curNode = refIt.next();
+
+                if (curNode == node) {
+                    final int leftIndex = refIt.previousIndex();
+                    final int rightIndex = refIt.nextIndex();
+
+                    if ((leftIndex > -1) && (leftIndex < parent.refs.size())) {
+                        leftSiblingIndex = leftIndex;
+                        leftSibling = parent.refs.get(leftSiblingIndex);
+                        separator = parent.values.get(leftSiblingIndex);
+                    }
+
+                    if ((rightIndex > 0) 
+                            && (rightIndex - 1 < parent.refs.size())) {
+                        rightSiblingIndex = rightIndex;
+                        rightSibling = parent.refs.get(rightSiblingIndex);
+
+                        if (separator == null) {
+                            separator 
+                                = parent.values.get(rightSiblingIndex - 1);
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if ((rightSibling != null) && (rightSibling.values.size() > degree)) {
+            // TODO: implement left rotation
+            //System.out.println("rotate left");
+        } else if ((leftSibling != null) && (leftSibling.values.size() > degree)) {
+            // TODO: implement right rotation
+            //System.out.println("rotate right");
+        } else if ((leftSibling != null) && (rightSibling != null)) {
+            leftSibling.values.add(separator);
+            leftSibling.values.addAll(rightSibling.values);
+            leftSibling.refs.addAll(rightSibling.refs);
+            parent.values.remove(rightSiblingIndex - 1);
+            parent.refs.remove(rightSiblingIndex);
+            rightSibling = null;
+
+            if ((parent == root) && (parent.refs.isEmpty())) {
+                root = leftSibling;
+            } else if (parent.underflow()) {
+                rebalanceAfterDeletion(parent);
+            }
+        }
+    }
+
     /**
      * Returns a string representation of the tree by printing the root.
      *
@@ -395,7 +510,7 @@ public class BTree<T extends Comparable<T>> {
      * </ol>
      *
      * @author Thomas Lang
-     * @version 1.0, 2015-08-02
+     * @version 1.1, 2015-08-03
      */
     class Node<T extends Comparable<T>> {
 
@@ -429,6 +544,31 @@ public class BTree<T extends Comparable<T>> {
          */
         boolean isFull() {
             return values.size() > 2 * degree;
+        }
+
+        /**
+         * Checks if this node is a leaf node.<p>
+         * A node is a leaf node, if it has no children.
+         *
+         * @return Returns either {@code true} if the node is a leaf node or
+         *         {@code false} otherwise.
+         */
+        boolean isLeaf() {
+            ArrayList<Node<T>> refCopy = new ArrayList<Node<T>>();
+            refCopy.addAll(refs);
+            refCopy.removeIf(c -> c == null);
+            return refCopy.isEmpty();
+        }
+
+        /**
+         * Checks if this node has an underflow, what means that it contains 
+         * less values than the minimum amount of entries (the degree);
+         *
+         * @return Returns either {@code true} if the node has an underflow or
+         *         {@code false} otherwise.
+         */
+        boolean underflow() {
+            return values.size() < degree;
         }
 
         /**
@@ -498,5 +638,11 @@ public class BTree<T extends Comparable<T>> {
 
         System.out.println("Tree 1: " + tree);
         System.out.println("Tree 2: " + tree2);
+
+        System.out.print("\nDeleting '9' from tree ... ");
+        boolean delete9 = tree.remove(9);
+        System.out.println("done, " + (delete9 ? "" : "not ") + "successfully.");
+        
+        System.out.println("\nTree 1 now: " + tree);
     }
 }

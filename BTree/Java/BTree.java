@@ -40,7 +40,7 @@ import java.util.ListIterator;
  * average and worst case.
  *
  * @author Thomas Lang
- * @version 1.1, 2015-08-03
+ * @version 1.2, 2015-08-03
  * @see <a href="https://en.wikipedia.org/wiki/B-tree">B-trees on Wikipedia</a>
  * @see #BTree()
  */
@@ -63,6 +63,10 @@ public class BTree<T extends Comparable<T>> {
      * hold a maximum of 2 values, if a third value will be added, then this
      * node is splitted up into three nodes. As a consequence, a single node
      * can hold a maximum of {@code 2 * degree + 1} references to its children.
+     * On the other hand, the degree defines the minimum amount of elements
+     * stored in a single node, so if a node goes below this limit (e.g. in a
+     * deletion), the tree will be rebalanced. An exception to this rule is the
+     * root node.
      *
      * @param degree
      *          The degree of this B-tree.
@@ -89,6 +93,14 @@ public class BTree<T extends Comparable<T>> {
      */
     public int size() {
         return size;
+    }
+
+    /**
+     * Clears the tree.
+     */
+    public void clear() {
+        root = null;
+        size = 0;
     }
 
     /**
@@ -381,6 +393,20 @@ public class BTree<T extends Comparable<T>> {
         return node;
     }
 
+    /**
+     * Removes the element {@code value} from the tree.<p>
+     * If the tree is empty then nothing happens. Otherwise the node 
+     * containing the element will be searched. Then the deletion happens.
+     * If necessary, the node where the element was deleted will be rebalanced.
+     *
+     * @param value
+     *         The value to delete from the tree.
+     * @return Returns either {@code true} if the deletion was successful or
+     *         {@code false} if not.
+     * @throws IllegalStateException
+     *         An {@code IllegalStateException} will be thrown if there could 
+     *         not be found any node that could/should contain the value.
+     */
     public boolean remove(T value) {
 
         if (isEmpty()) {
@@ -396,18 +422,128 @@ public class BTree<T extends Comparable<T>> {
         final Node<T> parent = node.parent;
 
         if (node.isLeaf()) {
+            /* If the node is a leaf node, deletion is simple. */
             node.values.remove(value);
             
             if (node.underflow()) {
                 rebalanceAfterDeletion(node);
             }
         } else {
-            // TODO: implement deleting a non-leaf node
+            /*
+             * If the node is an internal node, we have to replace the 
+             * separator with the maximum node still below it to ensure the
+             * constraints to such a tree.
+             *
+             * So the node where something is actually deleted is in this 
+             * implementation the nearest left child to the node. This node
+             * must be rebalanced if necessary.
+             */
+            Node<T> leftChild = null;
+            ListIterator<Node<T>> refIt = node.refs.listIterator();
+            ListIterator<T> valIt = node.values.listIterator();
+
+            while (refIt.hasNext()) {
+                Node<T> curNode = refIt.next();
+                T curValue = valIt.next();
+
+                if (curNode != null) {
+                    T maxValue = curNode.values.get(curNode.values.size() - 1);
+                    Node<T> nextNode = refIt.next();
+                    T nextValue = nextNode.values.get(0);
+                    refIt.previous();
+
+                    if ((maxValue.compareTo(value) < 0) 
+                            && (nextValue.compareTo(value) > 0)) {
+                        leftChild = curNode;
+                        curNode.values.remove(curNode.values.size() - 1);
+                        valIt.set(maxValue);
+                        break;
+                    }
+                }
+            }
+
+            if ((leftChild != null) && (leftChild.underflow())) {
+                rebalanceAfterDeletion(leftChild);
+            }
         }
 
         return true;
     }
 
+    /**
+     * Rebalances the tree starting at {@code node} after a deletion.<p>
+     * If the passed node has an underflow due to a deletion, it must be 
+     * rebalanced. There are three possible ways to do so depending on the
+     * size of the node's immediate siblings:
+     *
+     * <ol>
+     *  <li>
+     *    If the node's direct right sibling exists and can share an element:
+     *    <ol>
+     *      <li>
+     *        Move the separator down to the end of the node.
+     *      </li>
+     *      <li>
+     *        Replace the old separator in the parent node with the first 
+     *        element from the right sibling.
+     *      </li>
+     *      <li>
+     *        After this, the tree is finished as the right sibling cannot have
+     *        an underflow because we checked earlier that it can share at 
+     *        least one element.
+     *      </li>
+     *    </ol>
+     *  </li>
+     *  <li>
+     *    Otherwise, if the node's direct left sibling exists and can share an
+     *    element:
+     *    <ol>
+     *      <li>
+     *        Move the separator down to the beginning of the node.
+     *      </li>
+     *      <li>
+     *        Replace the old separator in the parent node with the last 
+     *        element from the left sibling.
+     *      </li>
+     *      <li>
+     *        After this, the tree is finished as the left sibling cannot have
+     *        an underlow because we checked earlier taht it can share at least
+     *        one element.
+     *      </li>
+     *    </ol>
+     *  </li>
+     *  <li>
+     *    Otherwise:
+     *    <ol>
+     *      <li>
+     *        Move down the separator to the end of the left node that may be
+     *        a sibling of the deficient node itself.
+     *      </li>
+     *      <li>
+     *        Move <em>all</em> elements from the right sibling to the left
+     *        node (including the pointers to it's children). As at this point
+     *        the left node becomes full while the right node becomes empty.
+     *      </li>
+     *      <li>
+     *        Remove the separator from the parent node including it's right
+     *        pointer to the right node. Here we must distinguish between two
+     *        possible cases:
+     *        <ul>
+     *          <li>
+     *            If the parent node is the root and if this does not contain
+     *            any elements now, just make the merged node (the original 
+     *            left node) the new root.
+     *          </li>
+     *          <li>
+     *            Otherwise, the parent node may have an underflow now, so this
+     *            node may be rebalanced.
+     *          </li>
+     *        </ul>
+     *      </li>
+     *    </ol>
+     *  </li>
+     * </ol>
+     */
     private void rebalanceAfterDeletion(Node<T> node) {
         assert node != null : "Null node passed.";
 
@@ -433,6 +569,7 @@ public class BTree<T extends Comparable<T>> {
             rightSibling = parent.refs.get(rightSiblingIndex);
             separator = parent.values.get(parent.values.size() - 1);
         } else {
+            /* Find the separator and the two siblings. */
             while (refIt.hasNext()) {
                 final Node<T> curNode = refIt.next();
 
@@ -462,13 +599,45 @@ public class BTree<T extends Comparable<T>> {
             }
         }
 
+        /* 
+         * Rebalancing strategies, check out JavaDoc comment for documentation.
+         */
+
         if ((rightSibling != null) && (rightSibling.values.size() > degree)) {
-            // TODO: implement left rotation
-            //System.out.println("rotate left");
-        } else if ((leftSibling != null) && (leftSibling.values.size() > degree)) {
-            // TODO: implement right rotation
-            //System.out.println("rotate right");
+            /* First strategy: rotate left */
+
+            final Node<T> right = rightSibling.refs.get(0);
+            node.values.add(separator);
+            node.refs.add(right);
+            
+            if (right != null) {
+                right.parent = node;
+            }
+
+            parent.values.remove(separator);
+            parent.values.add(rightSibling.values.get(0));
+            rightSibling.values.remove(0);
+            rightSibling.refs.remove(0);
+        } else if ((leftSibling != null) 
+                && (leftSibling.values.size() > degree)) {
+            /* Second strategy: rotate right */
+
+            final Node<T> left = leftSibling.refs.get(leftSibling.refs.size() - 1);
+            node.values.add(0, separator);
+            node.refs.add(0, left);
+
+            if (left != null) {
+                left.parent = node;
+            }
+
+            parent.values.remove(separator);
+            parent.values.add(0, 
+                    leftSibling.values.get(leftSibling.values.size() - 1));
+            leftSibling.values.remove(leftSibling.values.size() - 1);
+            leftSibling.refs.remove(leftSibling.refs.size() - 1);
         } else if ((leftSibling != null) && (rightSibling != null)) {
+            /* Third strategy: Merge siblings. */
+
             leftSibling.values.add(separator);
             leftSibling.values.addAll(rightSibling.values);
             leftSibling.refs.addAll(rightSibling.refs);
@@ -641,8 +810,18 @@ public class BTree<T extends Comparable<T>> {
 
         System.out.print("\nDeleting '9' from tree ... ");
         boolean delete9 = tree.remove(9);
-        System.out.println("done, " + (delete9 ? "" : "not ") + "successfully.");
-        
+        System.out.println("done, " + (delete9 ? "" : "not ") + "successful.");
+        System.out.println("\nTree 1 now: " + tree);
+
+        System.out.print("\nDeleting '2' from tree ... ");
+        boolean delete2 = tree.remove(2);
+        System.out.println("done, " + (delete2 ? "" : "not ") + "successful.");
+        System.out.print("Deleting '8' from tree ... ");
+        boolean delete8 = tree.remove(8);
+        System.out.println("done, " + (delete8 ? "" : "not ") + "successful.");
+        System.out.print("Deleting '5' from tree ... ");
+        boolean delete5 = tree.remove(5);
+        System.out.println("done, " + (delete5 ? "" : "not ") + "successful.");
         System.out.println("\nTree 1 now: " + tree);
     }
 }

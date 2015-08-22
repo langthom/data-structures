@@ -40,7 +40,7 @@
            :initarg :parent 
            :initform nil
            :documentation "Pointer to this node's parent node."))
-  :documentation 
+  (:documentation 
   " Implementation of a single node of an AVL tree.<p>
     Such a node holds a single value and references to both child nodes and
     to its parent node. Furthermore, such a node has a balance, that depends
@@ -50,7 +50,7 @@
     @author Thomas Lang
     @version 1.0, 2015-08-21
     @see AVLTree#rotate(Node, boolean)
-    @see #getBalance()"
+    @see #getBalance()")
 )
 
 (defmethod get-balance ((n node))
@@ -108,7 +108,6 @@
         (princ ")"))))
 
 
-
 (defclass avltree ()
   ((size :accessor size 
          :initform 0 
@@ -118,7 +117,7 @@
          :initform nil 
          :initarg :root
          :documentation "The root node of the tree."))
-  :documentation
+  (:documentation
   "Implementation of an AVL tree.<p>
   An AVL tree is a binary tree named after its inventors Georgi Maximowitsch 
   <strong>A</strong>delson-<strong>V</strong>elski and Jewgeni Michailowitsch
@@ -131,7 +130,7 @@
  
   @author Thomas Lang
   @version 1.0, 2015-08-21
-  @see <a href="https://en.wikipedia.org/wiki/AVL_tree">AVLs on Wikipedia</a>"
+  @see <a href="https://en.wikipedia.org/wiki/AVL_tree">AVLs on Wikipedia</a>")
 )
 
 

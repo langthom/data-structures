@@ -73,7 +73,7 @@ contains (S l) x    = x `elem` l
 union :: Ord a => Set a -> Set a -> Set a
 union EmptySet t = t
 union s EmptySet = s
-union s t = S $ rmdups $ s ++ t
+union (S s) (S t) = S $ rmdups $ s ++ t
     where rmdups = map head . group . sort
 
 -- | Computes the intersection of the two passed sets.

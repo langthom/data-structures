@@ -45,7 +45,7 @@ END MODULE Node
 ! Implementation of a simple queue that holds some generic nodes that hold data.
 ! Author: Thomas Lang
 ! Version: 2015-08-25
-MODULE Gen_Stack
+MODULE Gen_Queue
   IMPLICIT NONE
 
   PRIVATE
@@ -177,13 +177,13 @@ CONTAINS
 
     queue_data = selfcopy%data
   END SUBROUTINE queue_peek
-END MODULE Gen_Stack
+END MODULE Gen_Queue
 
 ! Main program, testing.
 ! Author: Thomas Lang
 ! Version: 2015-08-27
-PROGRAM StackTest
-  USE Gen_Stack
+PROGRAM QueueTest
+  USE Gen_Queue
   USE Node
   IMPLICIT NONE
 
@@ -195,7 +195,7 @@ PROGRAM StackTest
   ALLOCATE(ptr%point)
   ptr%point%value = 3.1415
 
-  ! Initialize Stack
+  ! Initialize Queue
   CALL queue_init(queue, TRANSFER(ptr, queue_data))
   PRINT *, 'Initializing queue with: ', ptr%point
 
@@ -219,4 +219,4 @@ PROGRAM StackTest
 
   ! Free the queue
   CALL queue_free(queue)  
-END PROGRAM StackTest
+END PROGRAM QueueTest

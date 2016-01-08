@@ -105,7 +105,7 @@
     (if (is-empty tree)
         (setf (root tree) n)
       (setf success (insert-rec (root tree) n)))
-    (if success (+ (size tree) 1))
+    (if success (incf (size tree)))
     success))
 
 (defmethod insert-rec ((current node) (n node))
@@ -203,7 +203,7 @@
                     (not (null (right delnode))))
                    (deleteInternalNode delnode))
                   (T (deleteNode delnode)))
-            (- (size tree) 1))))))
+            (decf (size tree)))))))
   T
 )
 
@@ -311,6 +311,10 @@
   (print-tree tree)
   (terpri)
 
+  (princ "Actual tree size:")
+  (print (size tree))
+  (terpri)
+
   (princ "Deleting '5' ... ")
   (remove-node tree 5)
   (princ "done.")
@@ -318,6 +322,10 @@
 
   (princ "Actual tree:")
   (print-tree tree)
+  (terpri)
+
+  (princ "Actual tree size:")
+  (print (size tree))
   (terpri)
 
   (princ "Does the tree contain '5'? -> ")

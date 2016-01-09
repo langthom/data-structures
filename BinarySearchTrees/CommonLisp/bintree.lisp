@@ -122,15 +122,11 @@
         (curvalue (value current)))
     (cond ((< newvalue curvalue)
            (if (null (left current))
-               (progn
-                 (setf (left current) n)
-                 (setf (parent n) current))
+               (setf (left current) n (parent n) current)
              (insert-rec (left current) n)))
           ((> newvalue curvalue)
            (if (null (right current))
-               (progn
-                 (setf (right current) n)
-                 (setf (parent n) current))
+               (setf (right current) n (parent n) current)
              (insert-rec (right current) n)))
           (t nil))) ; no duplicates allowed
   T)
@@ -195,7 +191,6 @@
       (if (null delnode)
           nil ; No node with 'value' found.
         (let ((par (parent delnode)))
-          (progn
             (cond ((eql value (value (root tree))) 
                    (deleteInternalNode (root tree)))
                   ((and 
@@ -203,7 +198,7 @@
                     (not (null (right delnode))))
                    (deleteInternalNode delnode))
                   (T (deleteNode delnode)))
-            (decf (size tree)))))))
+            (decf (size tree))))))
   T
 )
 

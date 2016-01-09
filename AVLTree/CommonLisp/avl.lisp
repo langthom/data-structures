@@ -129,8 +129,7 @@
   number of nodes in the tree.
  
   @author Thomas Lang
-  @version 1.0, 2015-08-21
-  @see <a href="https://en.wikipedia.org/wiki/AVL_tree">AVLs on Wikipedia</a>")
+  @version 1.1, 2016-01-09")
 )
 
 
@@ -161,7 +160,7 @@
     (if (is-empty tree)
         (setf (root tree) n)
       (setf success (insert-rec (root tree) n)))
-    (if success (+ (size tree) 1))
+    (if success (incf (size tree)))
     (rotate tree n nil)
     success))
 
@@ -182,15 +181,11 @@
         (curvalue (value current)))
     (cond ((< newvalue curvalue)
            (if (null (left current))
-               (progn
-                 (setf (left current) n)
-                 (setf (parent n) current))
+               (setf (left current) n (parent n) current)
              (insert-rec (left current) n)))
           ((> newvalue curvalue)
            (if (null (right current))
-               (progn
-                 (setf (right current) n)
-                 (setf (parent n) current))
+               (setf (right current) n (parent n) current)
              (insert-rec (right current) n)))
           (t nil))) ; no duplicates allowed
   T)
@@ -239,10 +234,7 @@
              The node to rotate over, which should not be {@code null}.
     @param deletion
              Indicator if this is a rotation after an insertion or after
-             a deletion of the node.
-    @see <a href="https://en.wikipedia.org/wiki/AVL_tree#Insertion">
-         Insertions and Deletions in AVL trees on Wikipedia
-         </a>"
+             a deletion of the node."
 
   (if (and
        (eql (root tree) n)
@@ -317,7 +309,6 @@
   (let* ((par (parent n))
         (rig (right n))
         (riglef (left rig)))
-    (progn
       (setf (parent n) rig)
       (setf (right n) riglef)
       (setf (parent rig) par)
@@ -326,7 +317,7 @@
           (setf (parent riglef) n))
       (cond ((null par) (setf (root tree) rig))
             ((eql n (left par)) (setf (left par) rig))
-            (T (setf (right par) rig)))))
+            (T (setf (right par) rig))))
   T
 )
 
@@ -340,7 +331,6 @@
   (let* ((par (parent n))
         (lef (left n))
         (lefrig (right lef)))
-    (progn
       (setf (parent n) lef)
       (setf (left n) lefrig)
       (setf (parent lef) par)
@@ -349,7 +339,7 @@
           (setf (parent lefrig) n))
       (cond ((null par) (setf (root tree) lef))
             ((eql n (right par)) (setf (right par) lef))
-            (T (setf (left par) lef)))))
+            (T (setf (left par) lef))))
   T
 )
 
@@ -417,7 +407,6 @@
       (if (null delnode)
           nil ; No node with 'value' found.
         (let ((par (parent delnode)))
-          (progn
             (cond ((eql value (value (root tree))) 
                    (deleteInternalNode (root tree)))
                   ((and 
@@ -425,9 +414,9 @@
                     (not (null (right delnode))))
                    (deleteInternalNode delnode))
                   (T (deleteNode delnode)))
-            (- (size tree) 1)
+            (decf (size tree))
             (if (not (null par))
-                (rotate tree par T)))))))
+                (rotate tree par T))))))
   T
 )
 
@@ -549,6 +538,10 @@
   (print-tree tree)
   (terpri)
 
+  (princ "Actual tree size:")
+  (print (size tree))
+  (terpri)
+
   (princ "Does the tree contain '999'? -> ")
   (if (contains tree 999)
       (princ "Yes")
@@ -563,6 +556,10 @@
   (remove-node tree -42)
   (remove-node tree 7)
   (princ "done.")
+  (terpri)
+
+  (princ "Actual tree size:")
+  (print (size tree))
   (terpri)
 
   (princ "Does the tree contain '-42'? -> ")

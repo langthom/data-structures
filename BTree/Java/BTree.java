@@ -133,6 +133,7 @@ public class BTree<T extends Comparable<T>> {
             node.refs.add(null);
             node.refs.add(null);
             root = node;
+            ++size;
             return true;
         }
 

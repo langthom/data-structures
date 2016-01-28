@@ -101,7 +101,7 @@ class BTree {
                 * @param outer 
                 *         Reference to the surrounding class for acessing members.
                 */
-                Node(BTree<U>& outer) : outer(nullptr), parent(nullptr)
+                Node(const BTree<U>& outer) : outer(nullptr), parent(nullptr)
                 {
                     this->outer = &outer;
                 }
@@ -109,7 +109,7 @@ class BTree {
                 /**
                  * Destroys a node instance.
                  */
-                virtual ~Node() {
+                ~Node() {
                     for (auto r = refs.begin(); r != refs.end(); ++r) delete *r;
                     values.clear();
                     refs.clear();
@@ -193,7 +193,7 @@ class BTree {
                 *         The node to write into the stream.
                 * @return Returns a string representation as described above written into the stream.
                 */
-                friend ostream& operator<<(ostream& out, const Node& src) {
+                ostream& operator<<(ostream& out, const Node& src) {
 					out << "[";
 					for (auto it = src.values.cbegin(); it != src.values.cend(); ++it) {
 						out << *it;

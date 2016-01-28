@@ -91,7 +91,7 @@ class BTree {
                 /** Container holding references to child nodes. */
                 vector<Node<U>*> refs;
 
-                /** Reference to a child node. */
+                /** Reference to the parent node. */
                 Node<U>* parent;
 
                /**
@@ -101,7 +101,7 @@ class BTree {
                 * @param outer 
                 *         Reference to the surrounding class for acessing members.
                 */
-                Node(const BTree<U>& outer) : outer(nullptr), parent(nullptr)
+                Node(BTree<U>& outer) : outer(nullptr), parent(nullptr)
                 {
                     this->outer = &outer;
                 }
@@ -193,7 +193,7 @@ class BTree {
                 *         The node to write into the stream.
                 * @return Returns a string representation as described above written into the stream.
                 */
-                ostream& operator<<(ostream& out, const Node& src) {
+                friend ostream& operator<<(ostream& out, const Node& src) {
 					out << "[";
 					for (auto it = src.values.cbegin(); it != src.values.cend(); ++it) {
 						out << *it;
